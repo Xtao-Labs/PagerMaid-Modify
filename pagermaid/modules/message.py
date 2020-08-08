@@ -60,7 +60,7 @@ async def userid(context):
                     message.forward.chat_id) + "`\ntitle: `" + message.forward.chat.title + "`"
                 if message.forward.chat.username:
                     text += "\nusername: @" + message.forward.chat.username
-                text += "\nmessage_id: `" + str(message.forward.id) + "`"
+                text += "\nmessage_id: `" + str(message.forward.message.id) + "`"
                 if message.forward.sender:
                     if message.forward.sender.last_name:
                         text += "\nsignature: `" + message.forward.sender.first_name + message.forward.sender.last_name + "`"
