@@ -35,7 +35,7 @@ async def userid(context):
             text += "username: @" + context.chat.username + "\n"
         text += "date: `" + str(context.chat.date) + "`\n"
     if message:
-        text += "\n以下是被回复消息的信息\nMessage ID: `" + str(message.id) + "`\n\n**User**\nid: `" + str(message.sender.id) + "`\n"
+        text += "\n以下是被回复消息的信息\nMessage ID: `" + str(message.id) + "`\n\n**User**\nid: `" + str(message.sender.id) + "`"
         if message.sender.bot:
             text += "\nis_bot: 是"
         try:
@@ -45,9 +45,39 @@ async def userid(context):
         if message.sender.last_name:
             text += "\nlast_name: `" + message.sender.last_name + "`"
         if message.sender.username:
-            text += "\nusername: @" + message.sender.username + ""
+            text += "\nusername: @" + message.sender.username
         if message.sender.lang_code:
             text += "\nlang_code: `" + message.sender.lang_code + "`"
+        if message.forward:
+            try:
+                user_f_id = message.forward.sender_id
+            except:
+                user_f_id = 0
+            if user_f_id == 0:
+                pass
+            elif str(user_f_id).startswith('-100'):
+                text += "\n\n**Forward From Channel**\nid: `" + str(
+                    message.forward.sender_id) + "`\ntitle: `" + message.forward.sender.title + "`"
+                if message.forward.sender.username:
+                    text += "\nusername: @" + message.forward.sender.username
+                text += "\nmessage_id: `" + str(message.forward.id) + "`"
+                if message.forward.sender.signatures:
+                    text += "\nsignature: `" + message.forward.sender.signatures
+            else:
+                text += "\n\n**Forward From User**\nid: `" + str(
+                    message.forward.sender_id) + "`"
+                if message.forward.sender.bot:
+                    text += "\nis_bot: 是"
+                try:
+                    text += "\nfirst_name: `" + message.forward.sender.first_name + "`"
+                except TypeError:
+                    text += "\n**死号**"
+                if message.forward.sender.last_name:
+                    text += "\nlast_name: `" + message.forward.sender.last_name + "`"
+                if message.forward.sender.username:
+                    text += "\nusername: @" + message.forward.sender.username
+                if message.forward.sender.lang_code:
+                    text += "\nlang_code: `" + message.forward.sender.lang_code + "`"
     await context.edit(text)
 
 
