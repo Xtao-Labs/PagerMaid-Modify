@@ -57,12 +57,15 @@ async def userid(context):
                 pass
             elif str(message.forward.chat_id).startswith('-100'):
                 text += "\n\n**Forward From Channel**\nid: `" + str(
-                    message.forward.sender_id) + "`\ntitle: `" + message.forward.sender.title + "`"
-                if message.forward.sender.username:
-                    text += "\nusername: @" + message.forward.sender.username
+                    message.forward.chat_id) + "`\ntitle: `" + message.forward.chat.title + "`"
+                if message.forward.chat.username:
+                    text += "\nusername: @" + message.forward.chat.username
                 text += "\nmessage_id: `" + str(message.forward.id) + "`"
-                if message.forward.sender.signatures:
-                    text += "\nsignature: `" + message.forward.sender.signatures
+                if message.forward.sender:
+                    if message.forward.sender.last_name:
+                        text += "\nsignature: `" + message.forward.sender.first_name + message.forward.sender.last_name + "`"
+                    else:
+                        text += "\nsignature: `" + message.forward.sender.first_name + "`"
             else:
                 text += "\n\n**Forward From User**\nid: `" + str(
                     message.forward.sender_id) + "`"
