@@ -2,10 +2,6 @@
 
 from os import getcwd, makedirs
 from os.path import exists
-try:
-    import socks
-except:
-    pass
 from sys import version_info, platform
 from yaml import load, FullLoader
 from shutil import copyfile
@@ -13,7 +9,7 @@ from redis import StrictRedis
 from logging import getLogger, INFO, DEBUG, StreamHandler
 from distutils2.util import strtobool
 from coloredlogs import ColoredFormatter
-from telethon import TelegramClient, connection
+from telethon import TelegramClient
 
 persistent_vars = {}
 module_dir = __path__[0]
@@ -92,8 +88,13 @@ if api_key is None or api_hash is None:
     exit(1)
 
 if not proxy_addr == '' and not proxy_port == '':
+    try:
+        import socks
+    except:
+        pass
     bot = TelegramClient("pagermaid", api_key, api_hash, auto_reconnect=True, proxy=(socks.SOCKS5, proxy_addr, int(proxy_port)))
 elif not mtp_addr == '' and not mtp_port == '' and not mtp_secret == '':
+    from telethon import connection
     bot = TelegramClient("pagermaid", api_key, api_hash, auto_reconnect=True,
                          connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
                          proxy=(mtp_addr, int(mtp_port), mtp_secret))
