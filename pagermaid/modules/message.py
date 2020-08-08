@@ -30,7 +30,7 @@ async def userid(context):
         text += "title: `" + context.chat.title + "`\n"
         if context.chat.username:
             text += "username: `" + context.chat.username + "`\n"
-        text += "data: `" + str(context.chat.data) + "`\n"
+        text += "date: `" + str(context.chat.date) + "`\n"
     text += "\n"
     if message:
         user_id = message.sender.id
