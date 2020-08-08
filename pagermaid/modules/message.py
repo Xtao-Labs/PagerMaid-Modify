@@ -15,11 +15,23 @@ from pagermaid.listener import listener
           description="获取一条消息的各种信息。")
 async def userid(context):
     """ Query the UserID of the sender of the message you replied to. """
-    try:
-        message = await context.get_reply_message()
-    except:
-        pass
-    text = "Message ID: `" + str(context.message.id) + "`\n**ChatID**：`" + str(context.chat_id) + "`"
+    message = await context.get_reply_message()
+    text = "Message ID: `" + str(context.message.id) + "`\n\n"
+    text += "**Chat**\nid:`" + str(context.chat_id) + "`\n"
+    if context.is_private:
+        text += "first_name: `" + context.chat.first_name + "`\n"
+        if context.chat.last_name:
+            text += "last_name: `" + context.chat.last_name + "`\n"
+        if context.chat.username:
+            text += "username: " + context.chat.username + "\n"
+        if context.chat.lang_code:
+            text += "lang_code: `" + context.chat.lang_code + "`\n"
+    if context.is_group or context.is_channel:
+        text += "title: `" + context.chat.title + "`\n"
+        if context.chat.username:
+            text += "username: `" + context.chat.username + "`\n"
+        text += "data: `" + str(context.chat.data) + "`\n"
+    text += "\n"
     if message:
         user_id = message.sender.id
         if message.sender.username:
