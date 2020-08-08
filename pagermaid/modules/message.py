@@ -50,12 +50,12 @@ async def userid(context):
             text += "\nlang_code: `" + message.sender.lang_code + "`"
         if message.forward:
             try:
-                user_f_id = message.forward.sender_id
+                user_f_id = message.forward.sender.id
             except:
                 user_f_id = 0
             if user_f_id == 0:
                 pass
-            elif str(user_f_id).startswith('-100'):
+            elif str(message.forward.sender.id).startswith('-100'):
                 text += "\n\n**Forward From Channel**\nid: `" + str(
                     message.forward.sender_id) + "`\ntitle: `" + message.forward.sender.title + "`"
                 if message.forward.sender.username:
