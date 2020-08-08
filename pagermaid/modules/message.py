@@ -57,7 +57,7 @@ async def userid(context):
                 text += "\nmessage_id: `" + str(message.forward.channel_post) + "`"
                 if message.forward.post_author:
                     text += "\npost_author: `" + message.forward.post_author + "`"
-                text += "\ndate: " + str(message.forward.date)
+                text += "\ndate: `" + str(message.forward.date) + "`"
             else:
                 if message.forward.sender:
                     text += "\n\n**Forward From User**\nid: `" + str(

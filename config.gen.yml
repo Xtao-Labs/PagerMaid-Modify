@@ -45,3 +45,10 @@ width: "1920"
 height: "1080"
 background: "#101010"
 margin: "20"
+
+#socks5 or MTProto
+proxy_addr: ""
+proxy_port: ""
+mtp_addr: ""
+mtp_port: ""
+mtp_secret: ""
