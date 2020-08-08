@@ -19,40 +19,35 @@ async def userid(context):
     text = "Message ID: `" + str(context.message.id) + "`\n\n"
     text += "**Chat**\nid:`" + str(context.chat_id) + "`\n"
     if context.is_private:
-        text += "first_name: `" + context.chat.first_name + "`\n"
+        try:
+            text += "first_name: `" + context.chat.first_name + "`\n"
+        except TypeError:
+            text += "**死号**\n"
         if context.chat.last_name:
             text += "last_name: `" + context.chat.last_name + "`\n"
         if context.chat.username:
-            text += "username: " + context.chat.username + "\n"
+            text += "username: @" + context.chat.username + "\n"
         if context.chat.lang_code:
             text += "lang_code: `" + context.chat.lang_code + "`\n"
     if context.is_group or context.is_channel:
         text += "title: `" + context.chat.title + "`\n"
         if context.chat.username:
-            text += "username: `" + context.chat.username + "`\n"
+            text += "username: @" + context.chat.username + "\n"
         text += "date: `" + str(context.chat.date) + "`\n"
-    text += "\n"
     if message:
-        user_id = message.sender.id
+        text += "\n以下是被回复消息的信息\nMessage ID: `" + str(message.id) + "`\n\n**User**\nid: `" + str(message.sender.id) + "`\n"
+        if message.sender.bot:
+            text += "\nis_bot: 是"
+        try:
+            text += "\nfirst_name: `" + message.sender.first_name + "`"
+        except TypeError:
+            text += "\n**死号**"
+        if message.sender.last_name:
+            text += "\nlast_name: `" + message.sender.last_name + "`"
         if message.sender.username:
-            target = "@" + message.sender.username
-        else:
-            try:
-                target = "**" + message.sender.first_name + "**"
-            except TypeError:
-                target = "**" + "死号" + "**"
-        if not message.forward:
-            text1 = "\n\n**以下是被回复消息的信息：** \n\nMessage ID: `" + str(message.id) + "`\n**道纹：** " + target + " \n" + "**用户ID：** `" + str(user_id) + "`"
-        else:
-            try:
-                user_f_id = message.forward.sender.id
-                if message.forward.sender.username:
-                    target_f = "@" + message.forward.sender.username
-                else:
-                    target_f = "*" + message.forward.sender.first_name + "*"
-                text1 = "\n\n**以下是被回复消息的信息：** \n\nMessage ID: `" + str(message.id) + "`\n**道纹：** " + target + " \n" + "**用户ID：** `" + str(user_id) + "` \n\n**以下是转发来源信息：** \n\n" + "**道纹：** " + target_f + " \n" + "**用户ID：** `" + str(user_f_id) + "`"
-            except:
-                text1 = "\n\n**以下是被回复消息的信息：** \n\nMessage ID: `" + str(message.id) + "`\n**道纹：** " + target + " \n" + "**用户ID：** `" + str(user_id) + "` \n\n**此消息没有包含被转发用户的信息**"
+            text += "\nusername: @" + message.sender.username + ""
+        if message.sender.lang_code:
+            text += "\nlang_code: `" + message.sender.lang_code + "`"
     else:
         text1 = " "
     text = text + text1
