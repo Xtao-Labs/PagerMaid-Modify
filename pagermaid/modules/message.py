@@ -49,11 +49,7 @@ async def userid(context):
         if message.sender.lang_code:
             text += "\nlang_code: `" + message.sender.lang_code + "`"
         if message.forward:
-            try:
-                user_f_id = message.forward.chat_id
-            except:
-                user_f_id = 0
-            if user_f_id == 0:
+            if not message.forward.sender:
                 pass
             elif str(message.forward.chat_id).startswith('-100'):
                 text += "\n\n**Forward From Channel**\nid: `" + str(
@@ -62,10 +58,7 @@ async def userid(context):
                     text += "\nusername: @" + message.forward.chat.username
                 text += "\nmessage_id: `" + str(message.forward.channel_post) + "`"
                 if message.forward.post_author:
-                    if message.forward.sender.last_name:
-                        text += "\nsignature: `" + message.forward.sender.first_name + message.forward.sender.last_name + "`"
-                    else:
-                        text += "\nsignature: `" + message.forward.sender.first_name + "`"
+                    text += "\npost_author: `" + message.forward.post_author + "`"
                 text += "\ndate: " + str(message.forward.date)
             else:
                 text += "\n\n**Forward From User**\nid: `" + str(
