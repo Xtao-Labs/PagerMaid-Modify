@@ -74,7 +74,7 @@ async def userid(context):
                         text += "\nusername: @" + message.forward.sender.username
                     if message.forward.sender.lang_code:
                         text += "\nlang_code: `" + message.forward.sender.lang_code + "`"
-                    text += "\ndate: " + str(message.forward.date)
+                    text += "\ndate: `" + str(message.forward.date) + "`"
     await context.edit(text)
 
 
