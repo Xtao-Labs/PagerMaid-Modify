@@ -48,9 +48,6 @@ async def userid(context):
             text += "\nusername: @" + message.sender.username + ""
         if message.sender.lang_code:
             text += "\nlang_code: `" + message.sender.lang_code + "`"
-    else:
-        text1 = " "
-    text = text + text1
     await context.edit(text)
 
 
