@@ -2,7 +2,10 @@
 
 from os import getcwd, makedirs
 from os.path import exists
-import socks
+try:
+    import socks
+except:
+    pass
 from sys import version_info, platform
 from yaml import load, FullLoader
 from shutil import copyfile
