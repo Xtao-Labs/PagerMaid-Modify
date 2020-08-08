@@ -60,12 +60,13 @@ async def userid(context):
                     message.forward.chat_id) + "`\ntitle: `" + message.forward.chat.title + "`"
                 if message.forward.chat.username:
                     text += "\nusername: @" + message.forward.chat.username
-                text += "\nmessage_id: `" + str(message.forward.message.id) + "`"
-                if message.forward.sender:
+                text += "\nmessage_id: `" + str(message.forward.channel_post) + "`"
+                if message.forward.post_author:
                     if message.forward.sender.last_name:
                         text += "\nsignature: `" + message.forward.sender.first_name + message.forward.sender.last_name + "`"
                     else:
                         text += "\nsignature: `" + message.forward.sender.first_name + "`"
+                text += "\ndate: " + str(message.forward.date)
             else:
                 text += "\n\n**Forward From User**\nid: `" + str(
                     message.forward.sender_id) + "`"
@@ -81,6 +82,7 @@ async def userid(context):
                     text += "\nusername: @" + message.forward.sender.username
                 if message.forward.sender.lang_code:
                     text += "\nlang_code: `" + message.forward.sender.lang_code + "`"
+                text += "\ndate: " + str(message.forward.date)
     await context.edit(text)
 
 
