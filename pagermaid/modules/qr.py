@@ -9,7 +9,7 @@ from pagermaid.listener import listener
 from pagermaid.utils import obtain_message, upload_attachment
 
 
-@listener(outgoing=True, command="genqr",
+@listener(is_plugin=False, outgoing=True, command="genqr",
           description="生成 QR Code 。",
           parameters="<string>")
 async def genqr(context):
@@ -32,7 +32,7 @@ async def genqr(context):
     await log(f"为 `{message}` 生成了一张 QR 码。")
 
 
-@listener(outgoing=True, command="parseqr",
+@listener(is_plugin=False, outgoing=True, command="parseqr",
           description="回复一张 QR 码进行解析并发送 QR 码内容。")
 async def parseqr(context):
     """ Parse attachment of replied message as a QR Code and output results. """

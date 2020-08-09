@@ -4,7 +4,7 @@ from pagermaid import redis, log, redis_status
 from pagermaid.listener import listener
 
 
-@listener(outgoing=True, command="ghost",
+@listener(is_plugin=False, outgoing=True, command="ghost",
           description="开启对话的自动已读，需要 Redis",
           parameters="<true|false|status>")
 async def ghost(context):
@@ -44,7 +44,7 @@ async def ghost(context):
         await context.edit("出错了呜呜呜 ~ 无效的参数。")
 
 
-@listener(outgoing=True, command="deny",
+@listener(is_plugin=False, outgoing=True, command="deny",
           description="拒绝聊天功能，需要 redis",
           parameters="<true|false|status>")
 async def deny(context):
@@ -80,7 +80,7 @@ async def deny(context):
         await context.edit("出错了呜呜呜 ~ 无效的参数。")
 
 
-@listener(incoming=True, ignore_edited=True)
+@listener(is_plugin=False, incoming=True, ignore_edited=True)
 async def set_read_acknowledgement(context):
     """ Event handler to infinitely read ghosted messages. """
     if not redis_status():
@@ -89,7 +89,7 @@ async def set_read_acknowledgement(context):
         await context.client.send_read_acknowledge(context.chat_id)
 
 
-@listener(incoming=True, ignore_edited=True)
+@listener(is_plugin=False, incoming=True, ignore_edited=True)
 async def message_removal(context):
     """ Event handler to infinitely delete denied messages. """
     if not redis_status():

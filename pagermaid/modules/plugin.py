@@ -10,7 +10,7 @@ from pagermaid.utils import upload_attachment
 from pagermaid.modules import plugin_list as active_plugins, __list_plugins
 
 
-@listener(outgoing=True, command="plugin", diagnostics=False,
+@listener(is_plugin=False, outgoing=True, command="plugin", diagnostics=False,
           description="用于管理安装到 PagerMaid-Modify 的插件。",
           parameters="{status|install|remove|enable|disable|upload} <插件名称/文件>")
 async def plugin(context):

@@ -13,7 +13,7 @@ from telethon.errors.rpcerrorlist import UserAlreadyParticipantError
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
 
-@listener(outgoing=True, command="sh",
+@listener(is_plugin=False, outgoing=True, command="sh",
           description="在 Telegram 上远程执行 Shell 命令。",
           parameters="<命令>")
 async def sh(context):
@@ -64,7 +64,7 @@ async def sh(context):
     await log(f"远程执行 Shell 命令： `{command}`")
 
 
-@listener(outgoing=True, command="restart", diagnostics=False,
+@listener(is_plugin=False, outgoing=True, command="restart", diagnostics=False,
           description="使 PagerMaid-Modify 重新启动")
 async def restart(context):
     """ To re-execute PagerMaid. """
@@ -74,7 +74,7 @@ async def restart(context):
         await context.client.disconnect()
 
 
-@listener(outgoing=True, command="trace",
+@listener(is_plugin=False, outgoing=True, command="trace",
           description="跟踪 URL 的重定向。",
           parameters="<url>")
 async def trace(context):
@@ -117,7 +117,7 @@ async def trace(context):
         await context.edit("无效的参数。")
 
 
-@listener(outgoing=True, command="contact",
+@listener(is_plugin=False, outgoing=True, command="contact",
           description="向 Kat 发送消息。",
           parameters="<message>")
 async def contact(context):
@@ -133,7 +133,7 @@ async def contact(context):
     )
 
 
-@listener(outgoing=True, command="chat",
+@listener(is_plugin=False, outgoing=True, command="chat",
           description="加入 Pagermaid-Modify 用户群。")
 async def contact_chat(context):
     """ join a chatroom. """

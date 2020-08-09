@@ -13,7 +13,7 @@ from pagermaid import bot, log
 from pagermaid.listener import listener
 
 
-@listener(outgoing=True, command="username",
+@listener(is_plugin=False, outgoing=True, command="username",
           description="通过命令快捷设置道纹（不支持回复）",
           parameters="<username>")
 async def username(context):
@@ -39,7 +39,7 @@ async def username(context):
     await log(f"道纹已被设置为 `{result}`.")
 
 
-@listener(outgoing=True, command="name",
+@listener(is_plugin=False, outgoing=True, command="name",
           description="换个名称。（不支持回复）",
           parameters="<first name> <last name>")
 async def name(context):
@@ -67,7 +67,7 @@ async def name(context):
         await log(f"显示名称已被更改为 `{first_name}`.")
 
 
-@listener(outgoing=True, command="pfp",
+@listener(is_plugin=False, outgoing=True, command="pfp",
           description="回复某条带附件的消息然后把它变成咱的头像")
 async def pfp(context):
     """ Sets your profile picture. """
@@ -97,7 +97,7 @@ async def pfp(context):
             await context.edit("出错了呜呜呜 ~ 无法将此附件解析为图片。")
 
 
-@listener(outgoing=True, command="bio",
+@listener(is_plugin=False, outgoing=True, command="bio",
           description="设置咱的公开情报",
           parameters="<string>")
 async def bio(context):
@@ -114,7 +114,7 @@ async def bio(context):
     await log(f"公开的情报已被设置为 `{context.arguments}`.")
 
 
-@listener(outgoing=True, command="rmpfp",
+@listener(is_plugin=False, outgoing=True, command="rmpfp",
           description="删除指定数量的咱的头像",
           parameters="<整数>")
 async def rmpfp(context):
@@ -145,7 +145,7 @@ async def rmpfp(context):
     await context.edit(f"`删除了 {len(input_photos)} 张头像。`")
 
 
-@listener(outgoing=True, command="profile",
+@listener(is_plugin=False, outgoing=True, command="profile",
           description="生成一位用户简介 ~ 消息有点长",
           parameters="<username>")
 async def profile(context):

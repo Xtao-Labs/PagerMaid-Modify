@@ -8,7 +8,7 @@ from pagermaid.listener import listener
 from pagermaid.utils import execute
 
 
-@listener(outgoing=True, command="update",
+@listener(is_plugin=False, outgoing=True, command="update",
           description="从远程来源检查更新，并将其安装到 PagerMaid-Modify。",
           parameters="<boolean>")
 async def update(context):

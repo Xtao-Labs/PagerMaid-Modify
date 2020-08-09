@@ -15,7 +15,7 @@ from pagermaid.utils import execute, upload_attachment
 from pagermaid.listener import listener
 
 
-@listener(outgoing=True, command="sysinfo",
+@listener(is_plugin=False, outgoing=True, command="sysinfo",
           description="通过 neofetch 检索系统信息。")
 async def sysinfo(context):
     """ Retrieve system information via neofetch. """
@@ -24,7 +24,7 @@ async def sysinfo(context):
     await context.edit(f"`{result}`")
 
 
-@listener(outgoing=True, command="fortune",
+@listener(is_plugin=False, outgoing=True, command="fortune",
           description="读取 fortune cookies 信息。")
 async def fortune(context):
     """ Reads a fortune cookie. """
@@ -35,7 +35,7 @@ async def fortune(context):
     await context.edit(result)
 
 
-@listener(outgoing=True, command="fbcon",
+@listener(is_plugin=False, outgoing=True, command="fbcon",
           description="拍摄当前绑定的帧缓冲控制台的屏幕截图。")
 async def tty(context):
     """ Screenshots a TTY and prints it. """
@@ -66,7 +66,7 @@ async def tty(context):
     await log("Screenshot of binded framebuffer console taken.")
 
 
-@listener(outgoing=True, command="status",
+@listener(is_plugin=False, outgoing=True, command="status",
           description="输出 PagerMaid-Modify 的运行状态。")
 async def status(context):
     database = "Connected" if redis_status() else "Disconnected"
@@ -81,7 +81,7 @@ async def status(context):
     )
 
 
-@listener(outgoing=True, command="speedtest",
+@listener(is_plugin=False, outgoing=True, command="speedtest",
           description="执行 speedtest 脚本并发送结果。")
 async def speedtest(context):
     """ Tests internet speed using speedtest. """
@@ -101,7 +101,7 @@ async def speedtest(context):
     )
 
 
-@listener(outgoing=True, command="connection",
+@listener(is_plugin=False, outgoing=True, command="connection",
           description="显示运行 PagerMaid-Modify 的服务器和 Telegram 服务器之间的连接信息。")
 async def connection(context):
     """ Displays connection information between PagerMaid and Telegram. """
@@ -114,7 +114,7 @@ async def connection(context):
     )
 
 
-@listener(outgoing=True, command="ping",
+@listener(is_plugin=False, outgoing=True, command="ping",
           description="计算运行 PagerMaid-Modify 的服务器和 Telegram 服务器之间的延迟。")
 async def ping(context):
     """ Calculates latency between PagerMaid and Telegram. """
@@ -125,7 +125,7 @@ async def ping(context):
     await context.edit(f"Pong!|{duration}")
 
 
-@listener(outgoing=True, command="topcloud",
+@listener(is_plugin=False, outgoing=True, command="topcloud",
           description="生成一张资源占用的词云图片。")
 async def topcloud(context):
     """ Generates a word cloud of resource-hungry processes. """

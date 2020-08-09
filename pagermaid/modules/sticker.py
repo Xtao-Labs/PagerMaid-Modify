@@ -12,7 +12,7 @@ from pagermaid import bot
 from pagermaid.listener import listener
 
 
-@listener(outgoing=True, command="sticker",
+@listener(is_plugin=False, outgoing=True, command="sticker",
           description="收集回复的图像/贴纸作为贴纸，通过参数指定 emoji 以设置非默认的 emoji。",
           parameters="<emoji>")
 async def sticker(context):

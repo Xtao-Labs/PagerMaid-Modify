@@ -4,7 +4,7 @@ from pagermaid import help_messages
 from pagermaid.listener import listener
 
 
-@listener(outgoing=True, command="help",
+@listener(is_plugin=False, outgoing=True, command="help",
           description="显示命令列表或单个命令的帮助。",
           parameters="<命令>")
 async def help(context):

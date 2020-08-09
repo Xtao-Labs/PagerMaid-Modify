@@ -13,7 +13,7 @@ from pagermaid.listener import listener, config
 from pagermaid.utils import clear_emojis, attach_log, fetch_youtube_audio
 
 
-@listener(outgoing=True, command="translate",
+@listener(is_plugin=False, outgoing=True, command="translate",
           description="通过 Google 翻译将目标消息翻译成指定的语言。（支持回复）",
           parameters="<文本>")
 async def translate(context):
@@ -52,7 +52,7 @@ async def translate(context):
         await log(f"把一条消息从 {source_lang} 翻译到了 {trans_lang}.")
 
 
-@listener(outgoing=True, command="tts",
+@listener(is_plugin=False, outgoing=True, command="tts",
           description="通过 Google文本到语音 基于字符串生成语音消息。",
           parameters="<string>")
 async def tts(context):
@@ -98,7 +98,7 @@ async def tts(context):
         await context.delete()
 
 
-@listener(outgoing=True, command="google",
+@listener(is_plugin=False, outgoing=True, command="google",
           description="使用 Google 查询",
           parameters="<query>")
 async def googletest(context):
@@ -148,7 +148,7 @@ async def googletest(context):
     await log(f"在Google搜索引擎上查询了 `{query}`")
 
 
-@listener(outgoing=True, command="fetchaudio",
+@listener(is_plugin=False, outgoing=True, command="fetchaudio",
           description="从多个平台获取音频文件。",
           parameters="<url>,<string>")
 async def fetchaudio(context):

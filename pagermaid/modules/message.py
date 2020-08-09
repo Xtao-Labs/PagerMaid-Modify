@@ -11,7 +11,7 @@ from pagermaid import bot, log, config
 from pagermaid.listener import listener
 
 
-@listener(outgoing=True, command="id",
+@listener(is_plugin=False, outgoing=True, command="id",
           description="获取一条消息的各种信息。")
 async def userid(context):
     """ Query the UserID of the sender of the message you replied to. """
@@ -78,7 +78,7 @@ async def userid(context):
     await context.edit(text)
 
 
-@listener(outgoing=True, command="uslog",
+@listener(is_plugin=False, outgoing=True, command="uslog",
           description="转发一条消息到日志。",
           parameters="<string>")
 async def uslog(context):
@@ -97,7 +97,7 @@ async def uslog(context):
         await context.edit("出错了呜呜呜 ~ 日志记录已禁用。")
 
 
-@listener(outgoing=True, command="log",
+@listener(is_plugin=False, outgoing=True, command="log",
           description="静默转发一条消息到日志。",
           parameters="<string>")
 async def log(context):
@@ -116,7 +116,7 @@ async def log(context):
         await context.edit("出错了呜呜呜 ~ 日志记录已禁用。")
 
 
-@listener(outgoing=True, command="re",
+@listener(is_plugin=False, outgoing=True, command="re",
           description="在当前会话复读回复的消息。（需要回复一条消息）",
           parameters="<次数>")
 async def re(context):
@@ -141,7 +141,7 @@ async def re(context):
         await context.edit("出错了呜呜呜 ~ 您好像没有回复一条消息。")
 
 
-@listener(outgoing=True, command="leave",
+@listener(is_plugin=False, outgoing=True, command="leave",
           description="说 “再见” 然后离开会话。")
 async def leave(context):
     """ It leaves you from the group. """
@@ -157,7 +157,7 @@ async def leave(context):
         await context.edit("出错了呜呜呜 ~ 当前聊天似乎不是群聊。")
 
 
-@listener(outgoing=True, command="meter2feet",
+@listener(is_plugin=False, outgoing=True, command="meter2feet",
           description="将米转换为英尺。",
           parameters="<meters>")
 async def meter2feet(context):
@@ -170,7 +170,7 @@ async def meter2feet(context):
     await context.edit(f"将 {str(meter)} 米装换为了 {str(feet)} 英尺。")
 
 
-@listener(outgoing=True, command="feet2meter",
+@listener(is_plugin=False, outgoing=True, command="feet2meter",
           description="将英尺转换为米。",
           parameters="<feet>")
 async def feet2meter(context):
@@ -183,7 +183,7 @@ async def feet2meter(context):
     await context.edit(f"将 {str(feet)} 英尺转换为了 {str(meter)} 米。")
 
 
-@listener(outgoing=True, command="hitokoto",
+@listener(is_plugin=False, outgoing=True, command="hitokoto",
           description="每日一言")
 async def hitokoto(context):
     """ Get hitokoto.cn """
@@ -225,14 +225,14 @@ async def hitokoto(context):
     await context.edit(f"{hitokoto_json['hitokoto']} - {hitokoto_json['from']}（{str(hitokoto_type)}）")
 
 
-@listener(outgoing=True, command="source",
+@listener(is_plugin=False, outgoing=True, command="source",
           description="显示原始 PagerMaid git 存储库的URL。")
 async def source(context):
     """ Outputs the git repository URL. """
     await context.edit("https://git.stykers.moe/scm/~stykers/pagermaid.git")
 
 
-@listener(outgoing=True, command="site",
+@listener(is_plugin=False, outgoing=True, command="site",
           description="显示原始 PagerMaid 项目主页的URL。")
 async def site(context):
     """ Outputs the site URL. """

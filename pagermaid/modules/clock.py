@@ -6,7 +6,7 @@ from pagermaid import config
 from pagermaid.listener import listener
 
 
-@listener(outgoing=True, command="time",
+@listener(is_plugin=False, outgoing=True, command="time",
           description="显示特定区域的时间，如果参数为空，则默认显示配置值。",
           parameters="<地区>")
 async def time(context):

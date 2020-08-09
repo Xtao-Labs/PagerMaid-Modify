@@ -6,7 +6,7 @@ from pagermaid import bot, working_dir
 from pagermaid.listener import listener
 
 
-@listener(incoming=True, ignore_edited=True)
+@listener(is_plugin=False, incoming=True, ignore_edited=True)
 async def status(context):
     if exists(f"{working_dir}/data/time"):
         with open(f"{working_dir}/data/time", "r") as f:  # 打开文件

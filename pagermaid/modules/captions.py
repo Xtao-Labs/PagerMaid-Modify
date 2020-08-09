@@ -10,7 +10,7 @@ from pagermaid.listener import listener
 from pagermaid.utils import execute, upload_attachment
 
 
-@listener(outgoing=True, command="convert",
+@listener(is_plugin=False, outgoing=True, command="convert",
           description="回复某条附件消息然后转换为图片输出")
 async def convert(context):
     """ Converts image to png. """
@@ -39,7 +39,7 @@ async def convert(context):
     remove("result.png")
 
 
-@listener(outgoing=True, command="caption",
+@listener(is_plugin=False, outgoing=True, command="caption",
           description="将两行字幕添加到回复的图片中，字幕将分别添加到顶部和底部，字幕需要以逗号分隔。",
           parameters="<string>,<string> <image>")
 async def caption(context):
@@ -90,7 +90,7 @@ async def caption(context):
     await log(f"成功将字幕 `{message}` 添加到了一张图片.")
 
 
-@listener(outgoing=True, command="ocr",
+@listener(is_plugin=False, outgoing=True, command="ocr",
           description="从回复的图片中提取文本")
 async def ocr(context):
     """ Extracts texts from images. """
@@ -127,7 +127,7 @@ async def ocr(context):
     remove(target_file_path)
 
 
-@listener(outgoing=True, command="highlight",
+@listener(is_plugin=False, outgoing=True, command="highlight",
           description="生成有语法高亮显示的图片。",
           parameters="<string>")
 async def highlight(context):

@@ -6,7 +6,7 @@ from pagermaid import log
 from pagermaid.listener import listener
 
 
-@listener(outgoing=True, command="prune",
+@listener(is_plugin=False, outgoing=True, command="prune",
           description="以此命令回复某条消息，将删除最新一条消息至该条消息之间的所有消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。（非群组管理员只删除自己的消息）")
 async def prune(context):
     """ Purge every single message after the message you replied to. """
@@ -32,7 +32,7 @@ async def prune(context):
     await notification.delete()
 
 
-@listener(outgoing=True, command="selfprune",
+@listener(is_plugin=False, outgoing=True, command="selfprune",
           description="删除当前对话您发送的特定数量的消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。入群消息非管理员无法删除。（倒序）当数字足够大时即可实现删除所有消息。",
           parameters="<数量>")
 async def selfprune(context):
@@ -58,7 +58,7 @@ async def selfprune(context):
     await notification.delete()
 
 
-@listener(outgoing=True, command="yourprune",
+@listener(is_plugin=False, outgoing=True, command="yourprune",
           description="删除当前对话您回复用户所发送的特定数量的消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。（倒序、需要删除消息权限）当数字足够大时即可实现删除所有消息。",
           parameters="<数量>")
 async def yourprune(context):
@@ -90,7 +90,7 @@ async def yourprune(context):
     await notification.delete()
 
 
-@listener(outgoing=True, command="del",
+@listener(is_plugin=False, outgoing=True, command="del",
           description="删除当前对话您回复的那条消息。（需要回复一条消息）")
 async def delete(context):
     """ Deletes the message you replied to. """
