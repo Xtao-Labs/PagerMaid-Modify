@@ -37,6 +37,11 @@ application_tts: "zh-CN"
 log: "False"
 log_chatid: "503691334"
 
+# Disabled Built-in Commands
+disabled_cmd:
+  - example1
+  - example2
+
 # Google search preferences
 result_length: "5"
 
