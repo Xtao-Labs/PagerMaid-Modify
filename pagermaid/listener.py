@@ -80,7 +80,7 @@ def listener(**args):
                                      "Error report generated.")
 
         if not is_plugin:
-            if config['disabled_cmd'].count(command) != 0:
+            if 'disabled_cmd' in config and config['disabled_cmd'].count(command) != 0:
                 return
 
         if not ignore_edited:
