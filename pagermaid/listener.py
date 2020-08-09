@@ -1,6 +1,6 @@
 """ PagerMaid event listener. """
 
-import sys
+import sys, os
 
 from telethon import events
 from telethon.errors import MessageTooLongError
@@ -11,6 +11,8 @@ from telethon.events import StopPropagation
 from pagermaid import bot, config, help_messages
 from pagermaid.utils import attach_log
 
+def noop(*args, **kw):
+    pass
 
 def listener(**args):
     """ Register an event listener. """
@@ -79,15 +81,15 @@ def listener(**args):
                     await attach_log(report, -1001441461877, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
 
-        if not is_plugin and 'disabled_cmd' in config:
-            if config['disabled_cmd'].count(command) != 0:
-                return
-
         if not ignore_edited:
             bot.add_event_handler(handler, events.MessageEdited(**args))
         bot.add_event_handler(handler, events.NewMessage(**args))
 
         return handler
+
+    if not is_plugin and 'disabled_cmd' in config:
+        if config['disabled_cmd'].count(command) != 0:
+            return noop
 
     if description is not None and command is not None:
         if parameters is None:
