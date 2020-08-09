@@ -1,11 +1,12 @@
 """ PagerMaid event listener. """
 
+import sys
+
 from telethon import events
 from telethon.errors import MessageTooLongError
 from distutils2.util import strtobool
 from traceback import format_exc
 from time import gmtime, strftime, time
-from sys import exc_info
 from telethon.events import StopPropagation
 from pagermaid import bot, config, help_messages
 from pagermaid.utils import attach_log
@@ -19,6 +20,7 @@ def listener(**args):
     pattern = args.get('pattern', None)
     diagnostics = args.get('diagnostics', True)
     ignore_edited = args.get('ignore_edited', False)
+    is_plugin = args.get('is_plugin', True)
     if command is not None:
         if command in help_messages:
             raise ValueError(f"出错了呜呜呜 ~ 命令 \"{command}\" 已经被注册。")
@@ -37,6 +39,8 @@ def listener(**args):
         del args['description']
     if 'parameters' in args:
         del args['parameters']
+    if 'is_plugin' in args:
+        del args['is_plugin']
 
     def decorator(function):
 
@@ -71,9 +75,13 @@ def listener(**args):
                              f"{context.text}\n-----END TARGET MESSAGE-----\n" \
                              f"# Traceback: \n-----BEGIN TRACEBACK-----\n" \
                              f"{str(format_exc())}\n-----END TRACEBACK-----\n" \
-                             f"# Error: \"{str(exc_info()[1])}\". \n"
+                             f"# Error: \"{str(sys.last_value)}\". \n"
                     await attach_log(report, -1001441461877, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
+
+        if not is_plugin:
+            if config['disabled_cmd'].count(command) != 0:
+                return
 
         if not ignore_edited:
             bot.add_event_handler(handler, events.MessageEdited(**args))
