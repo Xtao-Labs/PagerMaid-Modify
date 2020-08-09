@@ -25,8 +25,8 @@ except PhoneNumberInvalidError:
 for module_name in module_list:
     try:
         import_module("pagermaid.modules." + module_name)
-    except BaseException:
-        logs.info(f"模块 {module_name} 加载出错。")
+    except BaseException as exception:
+        logs.info(f"模块 {module_name} 加载出错: {type(exception)}: {exception}")
 for plugin_name in plugin_list:
     try:
         import_module("plugins." + plugin_name)
