@@ -79,8 +79,8 @@ def listener(**args):
                     await attach_log(report, -1001441461877, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
 
-        if not is_plugin:
-            if 'disabled_cmd' in config and config['disabled_cmd'].count(command) != 0:
+        if not is_plugin and 'disabled_cmd' in config:
+            if config['disabled_cmd'].count(command) != 0:
                 return
 
         if not ignore_edited:
