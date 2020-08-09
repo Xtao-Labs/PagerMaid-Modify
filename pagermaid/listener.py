@@ -1,6 +1,6 @@
 """ PagerMaid event listener. """
 
-import sys, os
+import sys
 
 from telethon import events
 from telethon.errors import MessageTooLongError
