@@ -63,7 +63,7 @@ start_docker() {
   echo "正在启动 Docker 容器 . . ."
   echo "在登录后，请按 Ctrl + C 使容器在后台模式下重新启动。"
   sleep 3
-  docker run -it --restart=always --name="$container_name" --hostname="$container_name" pagermaid_modify <&1
+  docker run -it --restart=always --name="$container_name" --hostname="$container_name" mrwangzhe/pagermaid_modify <&1
   echo ""
   echo "Docker 创建完毕。"
   echo ""
