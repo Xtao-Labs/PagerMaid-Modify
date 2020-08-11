@@ -56,7 +56,7 @@ build_docker() {
   read -r container_name <&1
   echo "正在拉取 Docker 镜像 . . ."
   docker rm -f "$container_name" > /dev/null 2>&1
-  docker pull pagermaid_modify
+  docker pull mrwangzhe/pagermaid_modify
 }
 
 start_docker() {
