@@ -1,10 +1,10 @@
 #!/bin/bash
-if [[ $EUID -ne 0 ]]; then
+if [[ $EUID -ne 0 ]]
+then
     clear
     echo "错误：本脚本需要 root 权限执行。" 1>&2
     exit 1
 fi
-
 
 welcome() {
   echo ""
@@ -14,7 +14,6 @@ welcome() {
   echo ""
   sleep 5
 }
-
 
 docker_check() {
   echo "正在检查 Docker 安装情况 . . ."
@@ -35,7 +34,7 @@ git_check() {
   then
     echo "Git 似乎存在, 安装过程继续 . . ."
   else
-    echo "Git 未安装在此系统上"
+    echo "Git 未安装在此系统上！"
     echo "请安装 Git 并重新运行此脚本。"
     exit 1
   fi
@@ -71,7 +70,6 @@ start_docker() {
   shon_online
 }
 
-
 start_installation() {
   welcome
   docker_check
@@ -103,8 +101,8 @@ start_pager(){
   printf "请输入 PagerMaid 容器的名称："
   read -r container_name <&1
   echo "正在启动 Docker 容器 . . ."
-  docker start $container_name  > /dev/null 2>&1
-  docker exec -it $container_name chmod  -R 777 /pagermaid/workdir  > /dev/null 2>&1
+  docker start $container_name > /dev/null 2>&1
+  docker exec -it $container_name chmod -R 777 /pagermaid/workdir  > /dev/null 2>&1
   docker exec -dt $container_name /pagermaid/workdir/venv/bin/python -m pagermaid  > /dev/null 2>&1
   echo ""
   echo "Docker 启动完毕。"
@@ -117,7 +115,7 @@ restart_pager(){
   read -r container_name <&1
   echo "正在重新启动 Docker 容器 . . ."
   docker restart $container_name > /dev/null 2>&1
-  docker exec -dt pagermaid /pagermaid/workdir/venv/bin/python -m pagermaid  > /dev/null 2>&1
+  docker exec -dt pagermaid /pagermaid/workdir/venv/bin/python -m pagermaid > /dev/null 2>&1
   echo ""
   echo "Docker 重新启动完毕。"
   echo ""
@@ -147,14 +145,32 @@ echo ""
 echo -n "请输入编号: "
 read N
 case $N in
-  1) start_installation ;;
-  2) cleanup ;;
-  3) stop_pager ;;
-  4) start_pager ;;
-  5) restart_pager ;;
-  6) reinstall_pager ;;
-  7) exit ;;
-  *) echo "Wrong input!" ;;
+  1)
+  start_installation
+  ;;
+  2)
+  cleanup
+  ;;
+  3)
+  stop_pager
+  ;;
+  4)
+  start_pager
+  ;;
+  5)
+  restart_pager
+  ;;
+  6)
+  reinstall_pager
+  ;;
+  7)
+  exit
+  ;;
+  *)
+  echo "Wrong input!"
+  sleep 5s
+  shon_online
+  ;;
 esac 
 }
 
