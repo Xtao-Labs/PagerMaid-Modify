@@ -140,7 +140,7 @@ apt_python_check() {
 	    		PYV=`which python3.6`
 	    	else
 	    	    echo "Python3.6 未安装在此系统上，正在进行安装"
-	    	    add-apt-repository ppa:deadsnakes/ppa
+	    	    add-apt-repository ppa:deadsnakes/ppa -y
 	    	    apt-get update >> /dev/null 2>&1
 	        	apt-get install python3.6 -y >> /dev/null 2>&1
 	    	    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1 >> /dev/null 2>&1
@@ -149,7 +149,7 @@ apt_python_check() {
 	    fi
 	else
 		echo "Python3.6 未安装在此系统上，正在进行安装"
-		add-apt-repository ppa:deadsnakes/ppa
+		add-apt-repository ppa:deadsnakes/ppa -y
 		apt-get update >> /dev/null 2>&1
 		apt-get install python3.6 -y >> /dev/null 2>&1
 		update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1 >> /dev/null 2>&1
@@ -231,7 +231,7 @@ apt_screen_check() {
 apt_require_install(){
 	echo "正在安装系统所需依赖，可能需要几分钟的时间 . . ."
 	apt-get install python3.6-dev python3-dev imagemagick software-properties-common tesseract-ocr tesseract-ocr-chi-sim libzbar-dev -y >> /dev/null 2>&1
-    add-apt-repository ppa:dawidd0811/neofetch
+    add-apt-repository ppa:dawidd0811/neofetch -y
     apt-get install neofetch -y >> /dev/null 2>&1
 }
 
@@ -314,24 +314,70 @@ configure() {
   esac
 }
 
+read_checknum(){
+	if [ "$ftime" == "111" ]; then
+		echo "失败次数达到上限！" && exit 1
+	read -p "请输入您的登录验证码: " checknum
+	screen -x -S userbot -p 0 -X stuff "$checknum"
+	screen -x -S userbot -p 0 -X stuff $'\n'
+	if [ ! -f "/var/lib/PagerMaid-Modify/pagermaid.session-journal" ]; then
+		read -p "您是否有二次登录验证码(y或n & 不知道二次登录验证码是什么请回车): " choi
+
+		if [ "$choi" == "y" ]; then
+			read -p "请输入您的二次登录验证码: " twotimepwd
+			screen -x -S userbot -p 0 -X stuff "$twotimepwd"
+			screen -x -S userbot -p 0 -X stuff $'\n'
+		elif [ "$choi" == "n" ] || [ "$choi" == "" ]; then
+			echo "登录验证码错误！"
+			sleep 3
+			ftime+=1
+			read_checknum
+		fi
+	fi
+}
 login_screen(){
 	screen -S userbot -X quit >> /dev/null 2>&1
 	screen -dmS userbot
 	sleep 1
     screen -x -S userbot -p 0 -X stuff "cd /var/lib/pagermaid && $PYV -m pagermaid"
     screen -x -S userbot -p 0 -X stuff $'\n'
-    read -p "请输入您的 Telegram 手机号码: " phonenum
-    screen -x -S userbot -p 0 -X stuff "$phonenum"
-    screen -x -S userbot -p 0 -X stuff $'\n'
-    read -p "请输入您的登录验证码: " checknum
-    screen -x -S userbot -p 0 -X stuff "$checknum"
-    screen -x -S userbot -p 0 -X stuff $'\n'
-    read -p "您是否有二次登录验证码(y或n): " choi
-    if [ "$choi" == "y" ]; then
-     	read -p "请输入您的二次登录验证码: " twotimepwd
-	    screen -x -S userbot -p 0 -X stuff "$twotimepwd"
-    	screen -x -S userbot -p 0 -X stuff $'\n'
-    fi
+	while 1;do
+		read -p "请输入您的 Telegram 手机号码: " phonenum
+		
+		if [ "$phonenum" == "" ]; then
+			continue;
+		fi
+		
+		screen -x -S userbot -p 0 -X stuff "$phonenum"
+		screen -x -S userbot -p 0 -X stuff $'\n'
+		
+		if [ "$(ps aux|grep [p]agermaid)" == "" ];then
+			echo "手机号输入错误！请确认您是否带了区号（中国号码为 +86 如 +8613301237756）" 
+			screen -x -S userbot -p 0 -X stuff "cd /var/lib/pagermaid && $PYV -m pagermaid"
+			screen -x -S userbot -p 0 -X stuff $'\n'
+			continue
+		fi
+		
+		read -p "请输入您的登录验证码: " checknum
+		screen -x -S userbot -p 0 -X stuff "$checknum"
+		screen -x -S userbot -p 0 -X stuff $'\n'
+		if [ ! -f "/var/lib/PagerMaid-Modify/pagermaid.session-journal" ]; then
+			read -p "您是否有二次登录验证码(y或n & 不知道二次登录验证码是什么请回车): " choi
+
+			if [ "$choi" == "y" ]; then
+				read -p "请输入您的二次登录验证码: " twotimepwd
+				screen -x -S userbot -p 0 -X stuff "$twotimepwd"
+				screen -x -S userbot -p 0 -X stuff $'\n'
+				break
+			elif [ "$choi" == "n" ] || [ "$choi" == "" ]; then
+				echo "登录验证码错误！"
+				sleep 3
+				ftime+=1
+				read_checknum
+				break
+			fi
+		fi
+	done
     sleep 5
     screen -S userbot -X quit >> /dev/null 2>&1
 }
