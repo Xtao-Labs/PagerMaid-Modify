@@ -343,7 +343,8 @@ login_screen(){
 	sleep 1
     screen -x -S userbot -p 0 -X stuff "cd /var/lib/pagermaid && $PYV -m pagermaid"
     screen -x -S userbot -p 0 -X stuff $'\n'
-	while 1;do
+	while :
+	do
 		read -p "请输入您的 Telegram 手机号码: " phonenum
 		
 		if [ "$phonenum" == "" ]; then
