@@ -1,5 +1,9 @@
 """ Pulls in the new version of PagerMaid from the git server. """
 
+import platform
+from subprocess import run, PIPE
+from datetime import datetime
+from time import strftime
 from os import remove
 from git import Repo
 from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
@@ -10,7 +14,7 @@ from pagermaid.utils import execute
 
 @listener(is_plugin=False, outgoing=True, command="update",
           description="从远程来源检查更新，并将其安装到 PagerMaid-Modify。",
-          parameters="<boolean>")
+          parameters="<true/debug>")
 async def update(context):
     if len(context.parameter) > 1:
         await context.edit("无效的参数。")
@@ -20,6 +24,21 @@ async def update(context):
     if len(context.parameter) == 1:
         parameter = context.parameter[0]
     repo_url = 'https://github.com/xtaodada/PagerMaid-Modify.git'
+
+    if parameter:
+        if parameter == "debug":
+            # Version info
+            git_version = run("git --version", stdout=PIPE, shell=True).stdout.decode().strip().replace("git version ", "")
+            git_change = bool(run("git diff-index HEAD --", stdout=PIPE, shell=True).stdout.decode().strip())
+            git_change = "是" if git_change else "否"
+            git_date = run("git log -1 --format='%at'", stdout=PIPE, shell=True).stdout.decode()
+            git_date = datetime.utcfromtimestamp(int(git_date)).strftime("%Y/%m/%d %H:%M:%S")
+            git_hash = run("git rev-parse --short HEAD", stdout=PIPE, shell=True).stdout.decode().strip()
+            get_hash_link = f"https://github.com/xtaodada/PagerMaid-Modify/commit/{git_hash}"
+            # Generate the text
+            text = "系统名称及版本号：`" + str(platform.platform()) + "`\n系统版本号：`" + str(platform.version()) + "`\n系统位数：`" + platform.architecture()[0] + "`\nPython 版本号：`" + str(platform.python_version()) + "`\n\nGit 版本号：`" + git_version + "`\n本地修改：" + git_change + "\n哈希值：[" + git_hash + "](" + get_hash_link + ")\n提交时间：`" + git_date + "`"
+            await context.edit(text)
+            return
 
     try:
         repo = Repo()
@@ -49,11 +68,11 @@ async def update(context):
     upstream_remote.fetch(active_branch)
     changelog = await changelog_gen(repo, f'HEAD..upstream/{active_branch}')
 
-    if not changelog:
-        await context.edit(f"`PagerMaid-Modify 在分支 ` **{active_branch}**` 中已是最新。`")
-        return
 
-    if parameter != "true":
+    if not parameter:
+        if not changelog:
+            await context.edit(f"`PagerMaid-Modify 在分支 ` **{active_branch}**` 中已是最新。`")
+            return
         changelog_str = f'**找到分支 {active_branch} 的更新.\n\n更新日志:**\n`{changelog}`'
         if len(changelog_str) > 4096:
             await context.edit("更新日志太长，正在附加文件。")
@@ -69,6 +88,7 @@ async def update(context):
         else:
             await context.edit(changelog_str + "\n**执行 \"-update true\" 来安装更新。**")
         return
+
 
     await context.edit('找到更新，正在拉取 . . .')
 
