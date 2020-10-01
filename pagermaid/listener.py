@@ -8,7 +8,7 @@ from distutils2.util import strtobool
 from traceback import format_exc
 from time import gmtime, strftime, time
 from telethon.events import StopPropagation
-from pagermaid import bot, config, help_messages
+from pagermaid import bot, config, help_messages, logs
 from pagermaid.utils import attach_log
 
 posthog.api_key = '1WepU-o7JwNKYqPNymWr_mrCu3RVPD-p28PUikPDfsI'
@@ -56,7 +56,12 @@ def listener(**args):
                         parameter = []
                     context.parameter = parameter
                     context.arguments = context.pattern_match.group(1)
-                    posthog.capture(str(context.sender_id), 'Function ' + context.text.split()[0].replace('-', ''))
+                    try:
+                        posthog.capture(str(context.sender_id), 'Function ' + context.text.split()[0].replace('-', ''))
+                    except:
+                        logs.info(
+                            "上报命令使用状态出错了呜呜呜 ~。"
+                        )
                 except BaseException:
                     context.parameter = None
                     context.arguments = None
@@ -85,7 +90,12 @@ def listener(**args):
                              f"# Error: \"{str(exc_info)}\". \n"
                     await attach_log(report, -1001441461877, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
-                    posthog.capture(str(context.sender_id), 'Error ' + context.text.split()[0].replace('-', ''), {'ChatID': str(context.chat_id), 'cause': str(exc_info)})
+                    try:
+                        posthog.capture(str(context.sender_id), 'Error ' + context.text.split()[0].replace('-', ''), {'ChatID': str(context.chat_id), 'cause': str(exc_info)})
+                    except:
+                        logs.info(
+                            "上报错误出错了呜呜呜 ~。"
+                        )
 
         if not ignore_edited:
             bot.add_event_handler(handler, events.MessageEdited(**args))

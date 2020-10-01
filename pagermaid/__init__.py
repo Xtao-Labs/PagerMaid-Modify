@@ -1,5 +1,6 @@
 """ PagerMaid initialization. """
 
+import posthog
 from os import getcwd, makedirs
 from os.path import exists
 from sys import version_info, platform
@@ -17,6 +18,7 @@ working_dir = getcwd()
 logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
 config = None
 help_messages = {}
+posthog.api_key = '1WepU-o7JwNKYqPNymWr_mrCu3RVPD-p28PUikPDfsI'
 logs = getLogger(__name__)
 logging_handler = StreamHandler()
 logging_handler.setFormatter(ColoredFormatter(logging_format))
@@ -102,6 +104,15 @@ else:
     bot = TelegramClient("pagermaid", api_key, api_hash, auto_reconnect=True)
 redis = StrictRedis(host=redis_host, port=redis_port, db=redis_db)
 
+try:
+    me = bot.get_me()
+    posthog.identify(str(me.id), {
+        'name': str(me.first_name)
+    })
+except:
+    logs.info(
+        "上报用户名称出错了呜呜呜 ~。"
+    )
 
 def redis_status():
     try:
