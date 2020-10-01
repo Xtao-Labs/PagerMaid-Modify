@@ -50,20 +50,17 @@ def listener(**args):
 
         async def handler(context):
             try:
-                posthog.identify(str(context.sender_id), {
-                    'name': str(context.sender.first_name)
-                })
                 try:
                     parameter = context.pattern_match.group(1).split(' ')
                     if parameter == ['']:
                         parameter = []
                     context.parameter = parameter
                     context.arguments = context.pattern_match.group(1)
+                    posthog.capture(str(context.sender_id), 'Function ' + context.text.split()[0].replace('-', ''))
                 except BaseException:
                     context.parameter = None
                     context.arguments = None
                 await function(context)
-                posthog.capture(str(context.sender_id), 'Function ' + context.text.split()[0].replace('-', ''))
             except StopPropagation:
                 raise StopPropagation
             except MessageTooLongError:
