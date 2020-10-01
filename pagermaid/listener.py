@@ -9,7 +9,7 @@ from traceback import format_exc
 from time import gmtime, strftime, time
 from telethon.events import StopPropagation
 from pagermaid import bot, config, help_messages, logs
-from pagermaid.utils import attach_log
+from pagermaid.utils import attach_report
 
 posthog.api_key = '1WepU-o7JwNKYqPNymWr_mrCu3RVPD-p28PUikPDfsI'
 
@@ -91,7 +91,7 @@ def listener(**args):
                              f"# Traceback: \n-----BEGIN TRACEBACK-----\n" \
                              f"{str(exc_format)}\n-----END TRACEBACK-----\n" \
                              f"# Error: \"{str(exc_info)}\". \n"
-                    await attach_log(report, -1001441461877, f"exception.{time()}.pagermaid", None,
+                    await attach_report(report, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
                     try:
                         posthog.capture(str(context.sender_id), 'Error ' + context.text.split()[0].replace('-', ''), {'ChatID': str(context.chat_id), 'cause': str(exc_info)})

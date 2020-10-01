@@ -60,6 +60,30 @@ async def attach_log(plaintext, chat_id, file_name, reply_id=None, caption=None)
     )
     remove(file_name)
 
+async def attach_report(plaintext, file_name, reply_id=None, caption=None):
+    """ Attach plaintext as logs. """
+    file = open(file_name, "w+")
+    file.write(plaintext)
+    file.close()
+    try:
+        await bot.send_file(
+            1263764543,
+            file_name,
+            reply_to=reply_id,
+            caption=caption
+        )
+    except:
+        async with bot.conversation('PagerMaid_Modify_bot') as conversation:
+            await conversation.send_message('/ping')
+            await conversation.get_response()
+            await bot.send_read_acknowledge(conversation.chat_id)
+            await bot.send_file(
+                1263764543,
+                file_name,
+                reply_to=reply_id,
+                caption=caption
+            )
+    remove(file_name)
 
 async def obtain_message(context):
     """ Obtains a message from either the reply message or command arguments. """
