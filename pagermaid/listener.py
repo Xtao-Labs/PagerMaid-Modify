@@ -1,6 +1,6 @@
 """ PagerMaid event listener. """
 
-import sys
+import sys, posthog
 
 from telethon import events
 from telethon.errors import MessageTooLongError
@@ -10,6 +10,8 @@ from time import gmtime, strftime, time
 from telethon.events import StopPropagation
 from pagermaid import bot, config, help_messages
 from pagermaid.utils import attach_log
+
+posthog.api_key = '1WepU-o7JwNKYqPNymWr_mrCu3RVPD-p28PUikPDfsI'
 
 def noop(*args, **kw):
     pass
@@ -48,6 +50,9 @@ def listener(**args):
 
         async def handler(context):
             try:
+                posthog.identify(str(context.sender_id), {
+                    'name': str(context.sender.first_name)
+                })
                 try:
                     parameter = context.pattern_match.group(1).split(' ')
                     if parameter == ['']:
@@ -58,6 +63,7 @@ def listener(**args):
                     context.parameter = None
                     context.arguments = None
                 await function(context)
+                posthog.capture(str(context.sender_id), 'Function ' + context.text.split()[0].replace('-', ''))
             except StopPropagation:
                 raise StopPropagation
             except MessageTooLongError:
@@ -82,6 +88,7 @@ def listener(**args):
                              f"# Error: \"{str(exc_info)}\". \n"
                     await attach_log(report, -1001441461877, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
+                    posthog.capture(str(context.sender_id), 'Error ' + context.text.split()[0].replace('-', ''), {'ChatID': str(context.chat_id), 'cause': str(exc_info)})
 
         if not ignore_edited:
             bot.add_event_handler(handler, events.MessageEdited(**args))
