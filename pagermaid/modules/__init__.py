@@ -43,7 +43,7 @@ plugin_list_string = plugin_list_string[:-2]
 
 module_list = sorted(__list_modules())
 plugin_list = sorted(__list_plugins())
-logs.info("Loading modules: %s", module_list_string)
+logs.info("加载内置模块：%s", module_list_string)
 if len(plugin_list) > 0:
-    logs.info("Loading plugins: %s", plugin_list_string)
+    logs.info("加载插件：%s", plugin_list_string)
 __all__ = __list_modules() + ["module_list"] + __list_plugins() + ["plugin_list"]

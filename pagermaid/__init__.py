@@ -104,15 +104,22 @@ else:
     bot = TelegramClient("pagermaid", api_key, api_hash, auto_reconnect=True)
 redis = StrictRedis(host=redis_host, port=redis_port, db=redis_db)
 
-try:
-    me = bot.get_me()
-    posthog.identify(str(me.id), {
-        'name': str(me.first_name)
-    })
-except:
-    logs.info(
-        "上报用户名称出错了呜呜呜 ~。"
-    )
+async def upload_name():
+    me = await bot.get_me()
+    try:
+        posthog.identify(str(me.id), {
+            'name': str(me.first_name)
+        })
+        logs.info(
+            "上报用户名称成功。"
+        )
+    except:
+        logs.info(
+            "上报用户名称出错了呜呜呜 ~"
+        )
+
+with bot:
+    bot.loop.run_until_complete(upload_name())
 
 def redis_status():
     try:
