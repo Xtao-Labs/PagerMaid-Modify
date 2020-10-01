@@ -56,16 +56,19 @@ def listener(**args):
                         parameter = []
                     context.parameter = parameter
                     context.arguments = context.pattern_match.group(1)
+                    posthog_capture = True
+                except BaseException:
+                    posthog_capture = False
+                    context.parameter = None
+                    context.arguments = None
+                await function(context)
+                if posthog_capture:
                     try:
                         posthog.capture(str(context.sender_id), 'Function ' + context.text.split()[0].replace('-', ''))
                     except:
                         logs.info(
                             "上报命令使用状态出错了呜呜呜 ~。"
                         )
-                except BaseException:
-                    context.parameter = None
-                    context.arguments = None
-                await function(context)
             except StopPropagation:
                 raise StopPropagation
             except MessageTooLongError:
