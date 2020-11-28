@@ -12,6 +12,7 @@ requests
 pytz
 cowpy
 googletrans
+translate
 gtts
 gtts-token
 wordcloud
