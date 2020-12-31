@@ -86,6 +86,7 @@ start_installation() {
     configure
     login
   else
+    nohup redis-server &
     /pagermaid/workdir/venv/bin/python -m pagermaid
   fi
 }
