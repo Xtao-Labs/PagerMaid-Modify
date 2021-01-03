@@ -390,6 +390,7 @@ login_screen() {
 			read -p "请输入您的二次登录验证码: " twotimepwd
 			screen -x -S userbot -p 0 -X stuff "$twotimepwd"
 			screen -x -S userbot -p 0 -X stuff $'\n'
+			break
 		fi
 	done
 	sleep 5
