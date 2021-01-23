@@ -7,7 +7,7 @@ from sys import version_info, platform
 from yaml import load, FullLoader
 from shutil import copyfile
 from redis import StrictRedis
-from logging import getLogger, StreamHandler
+from logging import getLogger, INFO, DEBUG, StreamHandler
 from distutils2.util import strtobool
 from coloredlogs import ColoredFormatter
 from telethon import TelegramClient
@@ -22,6 +22,8 @@ logs = getLogger(__name__)
 logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
 logging_handler = StreamHandler()
 logging_handler.setFormatter(ColoredFormatter(logging_format))
+logs.addHandler(logging_handler)
+logs.setLevel(INFO)
 
 try:
     config = load(open(r"config.yml"), Loader=FullLoader)
