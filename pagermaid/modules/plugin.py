@@ -227,7 +227,8 @@ async def plugin(context):
             await context.edit("出错了呜呜呜 ~ 无效的参数。")
     elif context.parameter[0] == "update":
         unneed_update = "无需更新："
-        need_update = "\n需要更新："
+        need_update = "\n已更新："
+        need_update_list = []
         if not exists(f"{plugin_directory}version.json"):
             await context.edit("安装一个仓库内插件再试试？")
             return
@@ -243,16 +244,44 @@ async def plugin(context):
                     if (float(i['version']) - float(value)) <= 0:
                         unneed_update += "\n`" + key + "`：Ver  " + value
                     else:
+                        need_update_list.extend([key])
                         need_update += "\n`" + key + "`：Ver  " + value + " --> Ver  " + i['version']
                     continue
         if unneed_update == "无需更新：":
             unneed_update = ''
-        if need_update == "\n需要更新：":
+        if need_update == "\n已更新：":
             need_update = ''
         if unneed_update == '' and need_update == '':
             await context.edit("不如去安装一些插件？")
         else:
-            await context.edit(unneed_update + need_update)
+            if len(need_update_list) == 0:
+                await context.edit('正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n**没有需要更新的插件。**')
+            else:
+                print(6)
+                await context.edit('正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n正在更新插件...')
+                plugin_directory = f"{working_dir}/plugins/"
+                for i in need_update_list:
+                    file_path = i + ".py"
+                    plugin_content = get(
+                        f"https://raw.githubusercontent.com/xtaodada/PagerMaid_Plugins/master/{i}.py").content
+                    with open(file_path, 'wb') as f:
+                        f.write(plugin_content)
+                    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
+                        version_json = json.load(f)
+                    for m in plugin_online:
+                        if m['name'] == i:
+                            version_json[i] = m['version']
+                    with open(f"{plugin_directory}version.json", 'w') as f:
+                        json.dump(version_json, f)
+                    if exists(f"{plugin_directory}{file_path}"):
+                        remove(f"{plugin_directory}{file_path}")
+                        move(file_path, plugin_directory)
+                    elif exists(f"{plugin_directory}{file_path}.disabled"):
+                        remove(f"{plugin_directory}{file_path}.disabled")
+                        move(file_path, f"{plugin_directory}{file_path}.disabled")
+                    else:
+                        move(file_path, plugin_directory)
+                await context.edit('正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n' + need_update)
     elif context.parameter[0] == "search":
         if len(context.parameter) == 1:
             await context.edit("没插件名我怎么搜索？")
