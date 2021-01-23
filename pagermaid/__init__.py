@@ -7,7 +7,7 @@ from sys import version_info, platform
 from yaml import load, FullLoader
 from shutil import copyfile
 from redis import StrictRedis
-from logging import getLogger
+from logging import getLogger, StreamHandler
 from distutils2.util import strtobool
 from coloredlogs import ColoredFormatter
 from telethon import TelegramClient
@@ -19,6 +19,9 @@ config = None
 help_messages = {}
 posthog.api_key = '1WepU-o7JwNKYqPNymWr_mrCu3RVPD-p28PUikPDfsI'
 logs = getLogger(__name__)
+logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
+logging_handler = StreamHandler()
+logging_handler.setFormatter(ColoredFormatter(logging_format))
 
 try:
     config = load(open(r"config.yml"), Loader=FullLoader)
