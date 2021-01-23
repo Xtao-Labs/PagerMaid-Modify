@@ -7,7 +7,7 @@ from sys import version_info, platform
 from yaml import load, FullLoader
 from shutil import copyfile
 from redis import StrictRedis
-from logging import getLogger, INFO, DEBUG, StreamHandler
+from logging import getLogger, INFO, DEBUG, StreamHandler, basicConfig
 from distutils2.util import strtobool
 from coloredlogs import ColoredFormatter
 from telethon import TelegramClient
@@ -23,8 +23,8 @@ logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
 logging_handler = StreamHandler()
 logging_handler.setFormatter(ColoredFormatter(logging_format))
 logs.addHandler(logging_handler)
-basicConfig(level=logging.INFO)
-getLogger('telethon').setLevel(logging.CRITICAL)
+basicConfig(level=INFO)
+getLogger('telethon').setLevel(INFO)
 logs.setLevel(INFO)
 
 try:
@@ -33,6 +33,12 @@ except FileNotFoundError:
     logs.fatal("出错了呜呜呜 ~ 配置文件不存在，正在生成新的配置文件。")
     copyfile(f"{module_dir}/assets/config.gen.yml", "config.yml")
     exit(1)
+
+
+if strtobool(config['debug']):
+    logs.setLevel(DEBUG)
+else:
+    logs.setLevel(INFO)
 
 
 if platform == "linux" or platform == "linux2" or platform == "darwin" or platform == "freebsd7" \
