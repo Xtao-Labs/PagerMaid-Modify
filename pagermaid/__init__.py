@@ -7,6 +7,7 @@ from sys import version_info, platform
 from yaml import load, FullLoader
 from shutil import copyfile
 from redis import StrictRedis
+from logging import getLogger
 from distutils2.util import strtobool
 from coloredlogs import ColoredFormatter
 from telethon import TelegramClient
@@ -17,6 +18,7 @@ working_dir = getcwd()
 config = None
 help_messages = {}
 posthog.api_key = '1WepU-o7JwNKYqPNymWr_mrCu3RVPD-p28PUikPDfsI'
+logs = getLogger(__name__)
 
 try:
     config = load(open(r"config.yml"), Loader=FullLoader)
