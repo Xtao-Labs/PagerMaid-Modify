@@ -22,7 +22,6 @@ logs = getLogger(__name__)
 logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
 logging_handler = StreamHandler()
 logging_handler.setFormatter(ColoredFormatter(logging_format))
-logs.addHandler(logging_handler)
 logs.setLevel(INFO)
 
 try:
