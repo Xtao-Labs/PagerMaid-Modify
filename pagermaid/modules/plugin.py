@@ -7,7 +7,7 @@ from os import remove, rename, chdir, path
 from os.path import exists
 from shutil import copyfile, move
 from glob import glob
-from pagermaid import log, working_dir
+from pagermaid import bot, log, working_dir
 from pagermaid.listener import listener
 from pagermaid.utils import upload_attachment
 from pagermaid.modules import plugin_list as active_plugins, __list_plugins
@@ -17,7 +17,7 @@ from pagermaid.modules import plugin_list as active_plugins, __list_plugins
           description="用于管理安装到 PagerMaid-Modify 的插件。",
           parameters="{update|search|show|status|install|remove|enable|disable|upload} <插件名称/文件>")
 async def plugin(context):
-    if len(context.parameter) > 2 or len(context.parameter) == 0:
+    if len(context.parameter) == 0:
         await context.edit("出错了呜呜呜 ~ 无效的参数。")
         return
     reply = await context.get_reply_message()
@@ -47,29 +47,61 @@ async def plugin(context):
             await context.edit(f"插件 {path.basename(file_path)[:-3]} 已安装，PagerMaid-Modify 正在重新启动。")
             await log(f"成功安装插件 {path.basename(file_path)[:-3]}.")
             await context.client.disconnect()
-        elif len(context.parameter) == 2:
-            plugin_name = context.parameter[1]
-            plugin_online = \
-            json.loads(get("https://raw.githubusercontent.com/xtaodada/PagerMaid_Plugins/master/list.json").content)[
-                'list']
-            if exists(f"{plugin_directory}version.json"):
-                with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                    version_json = json.load(f)
-                try:
-                    plugin_version = version_json[plugin_name]
-                except:
+        elif len(context.parameter) >= 2:
+            now_message = ""
+            success_list = []
+            failed_list = []
+            noneed_list = []
+            for x in range(len(context.parameter) - 1):
+                plugin_name = context.parameter[1 + x]
+                plugin_online = \
+                json.loads(get("https://raw.githubusercontent.com/xtaodada/PagerMaid_Plugins/master/list.json").content)[
+                    'list']
+                if exists(f"{plugin_directory}version.json"):
+                    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
+                        version_json = json.load(f)
+                    try:
+                        plugin_version = version_json[plugin_name]
+                    except:
+                        plugin_version = False
+                else:
+                    temp_dict = {}
+                    with open(f"{plugin_directory}version.json", 'w') as f:
+                        json.dump(temp_dict, f)
                     plugin_version = False
-            else:
-                temp_dict = {}
-                with open(f"{plugin_directory}version.json", 'w') as f:
-                    json.dump(temp_dict, f)
-                plugin_version = False
-            for i in plugin_online:
-                if i['name'] == plugin_name:
-                    if plugin_version:
-                        if (float(i['version']) - float(plugin_version)) <= 0:
-                            await context.edit(f"插件 {plugin_name} 为最新版本，无需更新。")
-                            return
+                flag = False
+                for i in plugin_online:
+                    if i['name'] == plugin_name:
+                        flag = True
+                        if plugin_version:
+                            if (float(i['version']) - float(plugin_version)) <= 0:
+                                now_message += f"插件 {plugin_name} 为最新版本，无需更新。\n"
+                                await context.edit(now_message)
+                                noneed_list.append(plugin_name)
+                                break
+                            else:
+                                file_path = plugin_name + ".py"
+                                plugin_content = get(
+                                    f"https://raw.githubusercontent.com/xtaodada/PagerMaid_Plugins/master/{plugin_name}.py").content
+                                with open(file_path, 'wb') as f:
+                                    f.write(plugin_content)
+                                with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
+                                    version_json = json.load(f)
+                                version_json[plugin_name] = i['version']
+                                with open(f"{plugin_directory}version.json", 'w') as f:
+                                    json.dump(version_json, f)
+                                if exists(f"{plugin_directory}{file_path}"):
+                                    remove(f"{plugin_directory}{file_path}")
+                                    move(file_path, plugin_directory)
+                                elif exists(f"{plugin_directory}{file_path}.disabled"):
+                                    remove(f"{plugin_directory}{file_path}.disabled")
+                                    move(file_path, f"{plugin_directory}{file_path}.disabled")
+                                else:
+                                    move(file_path, plugin_directory)
+                                now_message += f"插件 {path.basename(file_path)[:-3]} 已安装。\n"
+                                await context.edit(now_message)
+                                success_list.append(path.basename(file_path)[:-3])
+                                break
                         else:
                             file_path = plugin_name + ".py"
                             plugin_content = get(
@@ -89,32 +121,27 @@ async def plugin(context):
                                 move(file_path, f"{plugin_directory}{file_path}.disabled")
                             else:
                                 move(file_path, plugin_directory)
-                            await context.edit(f"插件 {path.basename(file_path)[:-3]} 已安装，PagerMaid-Modify 正在重新启动。")
-                            await log(f"成功安装插件 {path.basename(file_path)[:-3]}.")
-                            await context.client.disconnect()
-                    else:
-                        file_path = plugin_name + ".py"
-                        plugin_content = get(
-                            f"https://raw.githubusercontent.com/xtaodada/PagerMaid_Plugins/master/{plugin_name}.py").content
-                        with open(file_path, 'wb') as f:
-                            f.write(plugin_content)
-                        with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                            version_json = json.load(f)
-                        version_json[plugin_name] = i['version']
-                        with open(f"{plugin_directory}version.json", 'w') as f:
-                            json.dump(version_json, f)
-                        if exists(f"{plugin_directory}{file_path}"):
-                            remove(f"{plugin_directory}{file_path}")
-                            move(file_path, plugin_directory)
-                        elif exists(f"{plugin_directory}{file_path}.disabled"):
-                            remove(f"{plugin_directory}{file_path}.disabled")
-                            move(file_path, f"{plugin_directory}{file_path}.disabled")
-                        else:
-                            move(file_path, plugin_directory)
-                        await context.edit(f"插件 {path.basename(file_path)[:-3]} 已安装，PagerMaid-Modify 正在重新启动。")
-                        await log(f"成功安装插件 {path.basename(file_path)[:-3]}.")
-                        await context.client.disconnect()
-            await context.edit(f"错误：没有找到插件 {plugin_name} 。")
+                            now_message += f"插件 {path.basename(file_path)[:-3]} 已安装。\n"
+                            await context.edit(now_message)
+                            success_list.append(path.basename(file_path)[:-3])
+                if not flag:
+                    now_message += f"错误：没有找到插件 {plugin_name} 。\n"
+                    await context.edit(now_message)
+                    failed_list.append(plugin_name)
+            message = ""
+            if len(success_list) > 0:
+                message += "安装成功 : %s\n" % ", ".join(success_list)
+            if len(failed_list) > 0:
+                message += "安装失败 : %s\n" % ", ".join(failed_list)
+            if len(noneed_list) > 0:
+                message += "无需更新 : %s\n" % ", ".join(noneed_list)
+            await log(message)
+            restart = len(success_list) > 0
+            if restart:
+                message += "PagerMaid-Modify 正在重启。"
+            await bot.send_message(context.chat_id, message)
+            if restart:
+                await bot.disconnect()
         else:
             await context.edit("出错了呜呜呜 ~ 无效的参数。")
     elif context.parameter[0] == "remove":
