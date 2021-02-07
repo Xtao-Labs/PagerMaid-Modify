@@ -26,14 +26,20 @@ async def sticker(context):
     custom_emoji = False
     animated = False
     emoji = ""
-    await context.edit("收集图像/贴纸中 . . .")
+    try:
+        await context.edit("收集图像/贴纸中 . . .")
+    except:
+        pass
     if message and message.media:
         if isinstance(message.media, MessageMediaPhoto):
             photo = BytesIO()
             photo = await bot.download_media(message.photo, photo)
         elif "image" in message.media.document.mime_type.split('/'):
             photo = BytesIO()
-            await context.edit("下载图片中 . . .")
+            try:
+                await context.edit("下载图片中 . . .")
+            except:
+                pass
             await bot.download_file(message.media.document, photo)
             if (DocumentAttributeFilename(file_name='sticker.webp') in
                     message.media.document.attributes):
@@ -53,10 +59,16 @@ async def sticker(context):
             animated = True
             photo = 1
         else:
-            await context.edit("`出错了呜呜呜 ~ 不支持此文件类型。`")
+            try:
+                await context.edit("`出错了呜呜呜 ~ 不支持此文件类型。`")
+            except:
+                pass
             return
     else:
-        await context.edit("`出错了呜呜呜 ~ 请回复带有图片/贴纸的消息。`")
+        try:
+            await context.edit("`出错了呜呜呜 ~ 请回复带有图片/贴纸的消息。`")
+        except:
+            pass
         return
 
     if photo:
@@ -80,7 +92,10 @@ async def sticker(context):
         file = BytesIO()
 
         if not animated:
-            await context.edit("调整图像大小中 . . .")
+            try:
+                await context.edit("调整图像大小中 . . .")
+            except:
+                pass
             image = await resize_image(photo)
             file.name = "sticker.png"
             image.save(file, "PNG")
@@ -92,7 +107,10 @@ async def sticker(context):
         response = request.urlopen(
             request.Request(f'http://t.me/addstickers/{pack_name}'), context=ssl.create_default_context(cafile=certifi.where()))
         if not response.status == 200:
-            await context.edit("连接到 Telegram 服务器失败 . . .")
+            try:
+                await context.edit("连接到 Telegram 服务器失败 . . .")
+            except:
+                pass
             return
         http_response = response.read().decode("utf8").split('\n')
 
@@ -111,16 +129,21 @@ A pack can't have more than 120 stickers at the moment.":
                             pack += 1
                             pack_name = f"{user.username}_{pack}"
                             pack_title = f"@{user.username} 的私藏 ({pack})"
-                            await context.edit("切换到私藏 " + str(pack) +
-                                                " 上一个贴纸包已满 . . .")
+                            try:
+                                await context.edit("切换到私藏 " + str(pack) + " 上一个贴纸包已满 . . .")
+                            except:
+                                pass
                             await conversation.send_message(pack_name)
                             chat_response = await conversation.get_response()
                             if chat_response.text == "Invalid pack selected.":
                                 await add_sticker(conversation, command, pack_title, pack_name, animated, message,
                                                     context, file, emoji)
-                                await context.edit(
-                                    f"这张图片/贴纸已经被添加到 [这个](t.me/addstickers/{pack_name}) 贴纸包。",
-                                    parse_mode='md')
+                                try:
+                                    await context.edit(
+                                        f"这张图片/贴纸已经被添加到 [这个](t.me/addstickers/{pack_name}) 贴纸包。",
+                                        parse_mode='md')
+                                except:
+                                    pass
                                 return
                         await upload_sticker(animated, message, context, file, conversation)
                         await conversation.get_response()
@@ -133,7 +156,10 @@ A pack can't have more than 120 stickers at the moment.":
                         break
                 except AlreadyInConversationError:
                     if not sticker_already:
-                        await context.edit("另一个命令正在添加贴纸, 重新尝试中")
+                        try:
+                            await context.edit("另一个命令正在添加贴纸, 重新尝试中")
+                        except:
+                            pass
                         sticker_already = True
                     else:
                         pass
@@ -141,17 +167,23 @@ A pack can't have more than 120 stickers at the moment.":
                 except Exception:
                     raise
         else:
-            await context.edit("贴纸包不存在，正在创建 . . .")
+            try:
+                await context.edit("贴纸包不存在，正在创建 . . .")
+            except:
+                pass
             async with bot.conversation('Stickers') as conversation:
                 await add_sticker(conversation, command, pack_title, pack_name, animated, message,
                                   context, file, emoji)
 
-        notification = await context.edit(
+        try:
+            await context.edit(
                 f"这张图片/贴纸已经被添加到 [这个](t.me/addstickers/{pack_name}) 贴纸包。",
                 parse_mode='md')
+        except:
+            pass
         await sleep(5)
         try:
-            await notification.delete()
+            await context.delete()
         except:
             pass
 
@@ -185,12 +217,18 @@ async def add_sticker(conversation, command, pack_title, pack_name, animated, me
 
 async def upload_sticker(animated, message, context, file, conversation):
     if animated:
-        await context.edit("上传动图中 . . .")
+        try:
+            await context.edit("上传动图中 . . .")
+        except:
+            pass
         await conversation.send_file("AnimatedSticker.tgs", force_document=True)
         remove("AnimatedSticker.tgs")
     else:
         file.seek(0)
-        await context.edit("上传图片中 . . .")
+        try:
+            await context.edit("上传图片中 . . .")
+        except:
+            pass
         await conversation.send_file(file, force_document=True)
 
 
