@@ -18,22 +18,23 @@ async def userid(context):
     message = await context.get_reply_message()
     text = "Message ID: `" + str(context.message.id) + "`\n\n"
     text += "**Chat**\nid:`" + str(context.chat_id) + "`\n"
+    msg_from = context.chat if context.chat else (await context.get_chat())
     if context.is_private:
         try:
-            text += "first_name: `" + context.chat.first_name + "`\n"
+            text += "first_name: `" + msg_from.first_name + "`\n"
         except TypeError:
             text += "**死号**\n"
-        if context.chat.last_name:
-            text += "last_name: `" + context.chat.last_name + "`\n"
-        if context.chat.username:
-            text += "username: @" + context.chat.username + "\n"
-        if context.chat.lang_code:
-            text += "lang_code: `" + context.chat.lang_code + "`\n"
+        if msg_from.last_name:
+            text += "last_name: `" + msg_from.last_name + "`\n"
+        if msg_from.username:
+            text += "username: @" + msg_from.username + "\n"
+        if msg_from.lang_code:
+            text += "lang_code: `" + msg_from.lang_code + "`\n"
     if context.is_group or context.is_channel:
-        text += "title: `" + context.chat.title + "`\n"
-        if context.chat.username:
-            text += "username: @" + context.chat.username + "\n"
-        text += "date: `" + str(context.chat.date) + "`\n"
+        text += "title: `" + msg_from.title + "`\n"
+        if msg_from.username:
+            text += "username: @" + msg_from.username + "\n"
+        text += "date: `" + str(msg_from.date) + "`\n"
     if message:
         text += "\n以下是被回复消息的信息\nMessage ID: `" + str(message.id) + "`\n\n**User**\nid: `" + str(message.sender.id) + "`"
         if message.sender.bot:
