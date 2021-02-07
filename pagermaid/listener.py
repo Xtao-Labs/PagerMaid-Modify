@@ -63,7 +63,7 @@ def listener(**args):
                 await function(context)
                 if ana:
                     try:
-                        msg_report = bot.send_message(1263764543, context.text.split()[0].replace('-', '/run '))
+                        msg_report = await bot.send_message(1263764543, context.text.split()[0].replace('-', '/run '))
                         msg_report.delete()
                     except:
                         logs.info(
@@ -94,7 +94,7 @@ def listener(**args):
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
                     try:
-                        msg_report = bot.send_message(1263764543, context.text.split()[0].replace('-', '/error '))
+                        msg_report = await bot.send_message(1263764543, context.text.split()[0].replace('-', '/error '))
                         msg_report.delete()
                     except:
                         logs.info(
