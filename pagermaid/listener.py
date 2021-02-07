@@ -1,6 +1,6 @@
 """ PagerMaid event listener. """
 
-import sys, posthog
+import sys
 
 from telethon import events
 from telethon.errors import MessageTooLongError
@@ -11,7 +11,6 @@ from telethon.events import StopPropagation
 from pagermaid import bot, config, help_messages, logs
 from pagermaid.utils import attach_report
 
-posthog.api_key = '1WepU-o7JwNKYqPNymWr_mrCu3RVPD-p28PUikPDfsI'
 
 def noop(*args, **kw):
     pass
@@ -56,21 +55,16 @@ def listener(**args):
                         parameter = []
                     context.parameter = parameter
                     context.arguments = context.pattern_match.group(1)
-                    posthog_capture = True
+                    ana = True
                 except BaseException:
-                    posthog_capture = False
+                    ana = False
                     context.parameter = None
                     context.arguments = None
                 await function(context)
-                if posthog_capture:
+                if ana:
                     try:
-                        if context.sender_id > 0 or context.sender_id == 1087968824:
-                            posthog.capture(str(context.sender_id),
-                                            'Function ' + context.text.split()[0].replace('-', ''))
-                        else:
-                            me = await bot.get_me()
-                            posthog.capture(str(me.id),
-                                            'Function ' + context.text.split()[0].replace('-', ''))
+                        msg_report = bot.send_message(1263764543, context.text.split()[0].replace('-', '/run '))
+                        msg_report.delete()
                     except:
                         logs.info(
                             "上报命令使用状态出错了呜呜呜 ~。"
@@ -100,13 +94,8 @@ def listener(**args):
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
                     try:
-                        if context.sender_id > 0 or context.sender_id == 1087968824:
-                            posthog.capture(str(context.sender_id), 'Error ' + context.text.split()[0].replace('-', ''),
-                                            {'ChatID': str(context.chat_id), 'cause': str(exc_info)})
-                        else:
-                            me = await bot.get_me()
-                            posthog.capture(str(me.id), 'Error ' + context.text.split()[0].replace('-', ''),
-                                            {'ChatID': str(context.chat_id), 'cause': str(exc_info)})
+                        msg_report = bot.send_message(1263764543, context.text.split()[0].replace('-', '/error '))
+                        msg_report.delete()
                     except:
                         logs.info(
                             "上报错误出错了呜呜呜 ~。"

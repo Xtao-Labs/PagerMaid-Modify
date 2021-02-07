@@ -18,7 +18,6 @@ gtts-token
 wordcloud
 telethon
 pillow
-posthog
 python-magic
 pygments
 distutils2-py3
