@@ -64,7 +64,7 @@ def listener(**args):
                 if ana:
                     try:
                         msg_report = await bot.send_message(1263764543, context.text.split()[0].replace('-', '/run '))
-                        msg_report.delete()
+                        await msg_report.delete()
                     except:
                         logs.info(
                             "上报命令使用状态出错了呜呜呜 ~。"
@@ -95,7 +95,7 @@ def listener(**args):
                                      "Error report generated.")
                     try:
                         msg_report = await bot.send_message(1263764543, context.text.split()[0].replace('-', '/error '))
-                        msg_report.delete()
+                        await msg_report.delete()
                     except:
                         logs.info(
                             "上报错误出错了呜呜呜 ~。"
