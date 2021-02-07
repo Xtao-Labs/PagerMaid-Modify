@@ -7,10 +7,32 @@ from os import remove, rename, chdir, path
 from os.path import exists
 from shutil import copyfile, move
 from glob import glob
-from pagermaid import bot, log, working_dir
+from pagermaid import log, working_dir
 from pagermaid.listener import listener
 from pagermaid.utils import upload_attachment
 from pagermaid.modules import plugin_list as active_plugins, __list_plugins
+
+
+def move_plugin(file_path):
+    plugin_directory = f"{working_dir}/plugins/"
+    if exists(f"{plugin_directory}{file_path}"):
+        remove(f"{plugin_directory}{file_path}")
+        move(file_path, plugin_directory)
+    elif exists(f"{plugin_directory}{file_path}.disabled"):
+        remove(f"{plugin_directory}{file_path}.disabled")
+        move(file_path, f"{plugin_directory}{file_path}.disabled")
+    else:
+        move(file_path, plugin_directory)
+
+
+def update_version(file_path, plugin_content, plugin_name, version):
+    with open(file_path, 'wb') as f:
+        f.write(plugin_content)
+    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
+        version_json = json.load(f)
+        version_json[plugin_name] = version
+    with open(f"{plugin_directory}version.json", 'w') as f:
+        json.dump(version_json, f)
 
 
 @listener(is_plugin=False, outgoing=True, command="apt", diagnostics=False,
@@ -36,19 +58,12 @@ async def plugin(context):
                 except FileNotFoundError:
                     pass
                 return
-            if exists(f"{plugin_directory}{file_path}"):
-                remove(f"{plugin_directory}{file_path}")
-                move(file_path, plugin_directory)
-            elif exists(f"{plugin_directory}{file_path}.disabled"):
-                remove(f"{plugin_directory}{file_path}.disabled")
-                move(file_path, f"{plugin_directory}{file_path}.disabled")
-            else:
-                move(file_path, plugin_directory)
+            move_plugin(file_path)
             await context.edit(f"插件 {path.basename(file_path)[:-3]} 已安装，PagerMaid-Modify 正在重新启动。")
             await log(f"成功安装插件 {path.basename(file_path)[:-3]}.")
             await context.client.disconnect()
         elif len(context.parameter) >= 2:
-            now_message = ""
+            await context.edit("安装插件中 . . .")
             success_list = []
             failed_list = []
             noneed_list = []
@@ -75,58 +90,25 @@ async def plugin(context):
                         flag = True
                         if plugin_version:
                             if (float(i['version']) - float(plugin_version)) <= 0:
-                                now_message += f"插件 {plugin_name} 为最新版本，无需更新。\n"
-                                await context.edit(now_message)
                                 noneed_list.append(plugin_name)
                                 break
                             else:
                                 file_path = plugin_name + ".py"
                                 plugin_content = get(
                                     f"https://raw.githubusercontent.com/xtaodada/PagerMaid_Plugins/master/{plugin_name}.py").content
-                                with open(file_path, 'wb') as f:
-                                    f.write(plugin_content)
-                                with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                                    version_json = json.load(f)
-                                version_json[plugin_name] = i['version']
-                                with open(f"{plugin_directory}version.json", 'w') as f:
-                                    json.dump(version_json, f)
-                                if exists(f"{plugin_directory}{file_path}"):
-                                    remove(f"{plugin_directory}{file_path}")
-                                    move(file_path, plugin_directory)
-                                elif exists(f"{plugin_directory}{file_path}.disabled"):
-                                    remove(f"{plugin_directory}{file_path}.disabled")
-                                    move(file_path, f"{plugin_directory}{file_path}.disabled")
-                                else:
-                                    move(file_path, plugin_directory)
-                                now_message += f"插件 {path.basename(file_path)[:-3]} 已安装。\n"
-                                await context.edit(now_message)
+                                update_version(file_path, plugin_content, plugin_name, i['version'])
+                                move_plugin(file_path)
                                 success_list.append(path.basename(file_path)[:-3])
                                 break
                         else:
                             file_path = plugin_name + ".py"
                             plugin_content = get(
                                 f"https://raw.githubusercontent.com/xtaodada/PagerMaid_Plugins/master/{plugin_name}.py").content
-                            with open(file_path, 'wb') as f:
-                                f.write(plugin_content)
-                            with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                                version_json = json.load(f)
-                            version_json[plugin_name] = i['version']
-                            with open(f"{plugin_directory}version.json", 'w') as f:
-                                json.dump(version_json, f)
-                            if exists(f"{plugin_directory}{file_path}"):
-                                remove(f"{plugin_directory}{file_path}")
-                                move(file_path, plugin_directory)
-                            elif exists(f"{plugin_directory}{file_path}.disabled"):
-                                remove(f"{plugin_directory}{file_path}.disabled")
-                                move(file_path, f"{plugin_directory}{file_path}.disabled")
-                            else:
-                                move(file_path, plugin_directory)
-                            now_message += f"插件 {path.basename(file_path)[:-3]} 已安装。\n"
-                            await context.edit(now_message)
+                            update_version(file_path, plugin_content, plugin_name, i['version'])
+                            move_plugin(file_path)
                             success_list.append(path.basename(file_path)[:-3])
                 if not flag:
                     now_message += f"错误：没有找到插件 {plugin_name} 。\n"
-                    await context.edit(now_message)
                     failed_list.append(plugin_name)
             message = ""
             if len(success_list) > 0:
@@ -139,9 +121,9 @@ async def plugin(context):
             restart = len(success_list) > 0
             if restart:
                 message += "PagerMaid-Modify 正在重启。"
-            await bot.send_message(context.chat_id, message)
+            await context.edit(message)
             if restart:
-                await bot.disconnect()
+                await context.client.disconnect()
         else:
             await context.edit("出错了呜呜呜 ~ 无效的参数。")
     elif context.parameter[0] == "remove":
@@ -300,15 +282,9 @@ async def plugin(context):
                             version_json[i] = m['version']
                     with open(f"{plugin_directory}version.json", 'w') as f:
                         json.dump(version_json, f)
-                    if exists(f"{plugin_directory}{file_path}"):
-                        remove(f"{plugin_directory}{file_path}")
-                        move(file_path, plugin_directory)
-                    elif exists(f"{plugin_directory}{file_path}.disabled"):
-                        remove(f"{plugin_directory}{file_path}.disabled")
-                        move(file_path, f"{plugin_directory}{file_path}.disabled")
-                    else:
-                        move(file_path, plugin_directory)
+                    move_plugin(file_path)
                 await context.edit('正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n' + need_update)
+                await context.client.disconnect()
     elif context.parameter[0] == "search":
         if len(context.parameter) == 1:
             await context.edit("没插件名我怎么搜索？")
