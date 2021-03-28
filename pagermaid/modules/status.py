@@ -69,15 +69,18 @@ async def tty(context):
 @listener(is_plugin=False, outgoing=True, command="status",
           description="输出 PagerMaid-Modify 的运行状态。")
 async def status(context):
-    database = "Connected" if redis_status() else "Disconnected"
+    database = "在线" if redis_status() else "离线"
+    dialogs = await context.client.get_dialogs()
+    dialogs = len(dialogs)
     await context.edit(
         f"**PagerMaid-Modify 运行状态** \n"
         f"主机名: `{uname().node}` \n"
         f"主机平台: `{platform}` \n"
         f"Kernel 版本: `{uname().release}` \n"
         f"Python 版本: `{python_version()}` \n"
-        f"Library 版本: `{telethon_version.__version__}` \n"
-        f"数据库状态: `{'Connected' if redis_status() else 'Disconnected'}`"
+        f"Telethon 版本: `{telethon_version.__version__}` \n"
+        f"数据库状态: `{database}`"
+        f"对话总数: `{dialogs}`"
     )
 
 
