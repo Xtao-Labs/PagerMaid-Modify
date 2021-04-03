@@ -24,14 +24,14 @@ def before_send(event, hint):
 
 
 def get_id():
-    global get_id
-    if not get_id:
+    global getid
+    if not getid:
         user = bot.get_me()
-        get_id = user.id
-    return get_id
+        getid = user.id
+    return getid
 
 
-get_id = False
+getid = False
 report_time = time()
 git_hash = run("git rev-parse --short HEAD", stdout=PIPE, shell=True).stdout.decode()
 sentry_sdk.init(
