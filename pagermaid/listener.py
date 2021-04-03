@@ -2,7 +2,6 @@
 
 import sys, sentry_sdk, re
 
-from subprocess import run, PIPE
 from telethon import events
 from telethon.errors import MessageTooLongError
 from distutils2.util import strtobool
