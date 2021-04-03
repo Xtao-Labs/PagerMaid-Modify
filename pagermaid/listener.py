@@ -1,7 +1,8 @@
 """ PagerMaid event listener. """
 
-import sys
+import sys, sentry_sdk, re
 
+from subprocess import run, PIPE
 from telethon import events
 from telethon.errors import MessageTooLongError
 from distutils2.util import strtobool
@@ -10,6 +11,29 @@ from time import gmtime, strftime, time
 from telethon.events import StopPropagation
 from pagermaid import bot, config, help_messages, logs
 from pagermaid.utils import attach_report
+
+
+def before_send(event, hint):
+    global report_time
+    if time() <= report_time + 30:
+        report_time = time()
+        return None
+    else:
+        report_time = time()
+        return event
+
+
+report_time = time()
+user = await bot.get_me()
+git_hash = run("git rev-parse --short HEAD", stdout=PIPE, shell=True).stdout.decode()
+sentry_sdk.init(
+    "https://969892b513374f75916aaac1014aa7c2@o416616.ingest.sentry.io/5312335",
+    traces_sample_rate=1.0,
+    release=git_hash,
+    before_send=before_send,
+    environment="production"
+)
+sentry_sdk.set_user({"id": user.id, "ip_address": "{{auto}}"})
 
 
 def noop(*args, **kw):
@@ -55,25 +79,15 @@ def listener(**args):
                         parameter = []
                     context.parameter = parameter
                     context.arguments = context.pattern_match.group(1)
-                    ana = True
                 except BaseException:
-                    ana = False
                     context.parameter = None
                     context.arguments = None
                 await function(context)
-                if ana:
-                    try:
-                        msg_report = await bot.send_message(1263764543, context.text.split()[0].replace('-', '/run '))
-                        await msg_report.delete()
-                    except:
-                        logs.info(
-                            "上报命令使用状态出错了呜呜呜 ~。"
-                        )
             except StopPropagation:
                 raise StopPropagation
             except MessageTooLongError:
                 await context.edit("出错了呜呜呜 ~ 生成的输出太长，无法显示。")
-            except BaseException:
+            except BaseException as e:
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
                 try:
@@ -94,8 +108,9 @@ def listener(**args):
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
                     try:
-                        msg_report = await bot.send_message(1263764543, context.text.split()[0].replace('-', '/error '))
-                        await msg_report.delete()
+                        sentry_sdk.set_context("Target", {"ChatID": str(context.chat_id)}, "UserID": str(context.sender_id), "Msg": context.text})
+                        sentry_sdk.set_tag('com', re.findall("\w+",str.lower(context.text.split()[0]))[0])
+                        sentry_sdk.capture_exception(e)
                     except:
                         logs.info(
                             "上报错误出错了呜呜呜 ~。"
