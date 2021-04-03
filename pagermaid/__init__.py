@@ -1,6 +1,9 @@
 """ PagerMaid initialization. """
 
 import sentry_sdk
+
+from subprocess import run, PIPE
+from time import time
 from os import getcwd, makedirs
 from os.path import exists
 from sys import version_info, platform
