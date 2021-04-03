@@ -108,7 +108,7 @@ def listener(**args):
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                      "Error report generated.")
                     try:
-                        sentry_sdk.set_context("Target", {"ChatID": str(context.chat_id)}, "UserID": str(context.sender_id), "Msg": context.text})
+                        sentry_sdk.set_context("Target", {"ChatID": str(context.chat_id), "UserID": str(context.sender_id), "Msg": context.text})
                         sentry_sdk.set_tag('com', re.findall("\w+",str.lower(context.text.split()[0]))[0])
                         sentry_sdk.capture_exception(e)
                     except:
