@@ -34,3 +34,4 @@ cheroot
 PySocks
 certifi
 magic_google
+sentry-sdk
