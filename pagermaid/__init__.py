@@ -2,6 +2,7 @@
 
 import sentry_sdk
 
+from sentry_sdk.integrations.redis import RedisIntegration
 from subprocess import run, PIPE
 from time import time
 from os import getcwd, makedirs
