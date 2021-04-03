@@ -1,5 +1,6 @@
 """ PagerMaid initialization. """
 
+import sentry_sdk
 from os import getcwd, makedirs
 from os.path import exists
 from sys import version_info, platform
@@ -110,8 +111,8 @@ redis = StrictRedis(host=redis_host, port=redis_port, db=redis_db)
 
 async def save_id():
     me = await bot.get_me()
-    with open('data/uid', 'w') as f:
-        f.write(str(me.id))
+    sentry_sdk.set_user({"id": me.id, "ip_address": "{{auto}}"})
+    logs.info("设置用户标识成功。")
 
 
 with bot:
