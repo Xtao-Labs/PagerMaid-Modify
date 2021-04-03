@@ -23,15 +23,6 @@ def before_send(event, hint):
         return event
 
 
-def get_id():
-    global getid
-    if not getid:
-        user = bot.get_me()
-        getid = user.id
-    return getid
-
-
-getid = False
 report_time = time()
 git_hash = run("git rev-parse --short HEAD", stdout=PIPE, shell=True).stdout.decode()
 sentry_sdk.init(
@@ -41,7 +32,6 @@ sentry_sdk.init(
     before_send=before_send,
     environment="production"
 )
-sentry_sdk.set_user({"id": get_id(), "ip_address": "{{auto}}"})
 
 
 def noop(*args, **kw):
