@@ -107,6 +107,17 @@ else:
     bot = TelegramClient("pagermaid", api_key, api_hash, auto_reconnect=True)
 redis = StrictRedis(host=redis_host, port=redis_port, db=redis_db)
 
+
+async def save_id():
+    me = await bot.get_me()
+    with open('data/uid', 'w') as f:
+        f.write(str(me.id))
+
+
+with bot:
+    bot.loop.run_until_complete(save_id())
+
+
 def redis_status():
     try:
         redis.ping()
