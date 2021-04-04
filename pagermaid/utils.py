@@ -42,7 +42,7 @@ async def execute(command, pass_error=True):
     try:
         stdout, stderr = await executor.communicate()
     except CancelledError:
-        result = “该操作已被取消。”
+        result = "该操作已被取消。"
         return result
     if pass_error:
         result = str(stdout.decode().strip()) \
