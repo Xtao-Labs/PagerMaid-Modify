@@ -73,16 +73,19 @@ async def attach_report(plaintext, file_name, reply_id=None, caption=None):
             caption=caption
         )
     except:
-        async with bot.conversation('PagerMaid_Modify_bot') as conversation:
-            await conversation.send_message('/ping')
-            await conversation.get_response()
-            await bot.send_read_acknowledge(conversation.chat_id)
-            await bot.send_file(
-                1263764543,
-                file_name,
-                reply_to=reply_id,
-                caption=caption
-            )
+        try:
+            async with bot.conversation('PagerMaid_Modify_bot') as conversation:
+                await conversation.send_message('/ping')
+                await conversation.get_response()
+                await bot.send_read_acknowledge(conversation.chat_id)
+                await bot.send_file(
+                    1263764543,
+                    file_name,
+                    reply_to=reply_id,
+                    caption=caption
+                )
+        except:
+            pass
     remove(file_name)
 
 async def obtain_message(context):
