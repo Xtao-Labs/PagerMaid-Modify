@@ -7,6 +7,7 @@ from random import choice
 from json import load as load_json
 from re import sub, IGNORECASE
 from asyncio import create_subprocess_shell
+from asyncio.exceptions import CancelledError
 from asyncio.subprocess import PIPE
 from youtube_dl import YoutubeDL
 from pagermaid import module_dir, bot
@@ -38,7 +39,11 @@ async def execute(command, pass_error=True):
         stderr=PIPE
     )
 
-    stdout, stderr = await executor.communicate()
+    try:
+        stdout, stderr = await executor.communicate()
+    except CancelledError:
+        result = “该操作已被取消。”
+        return result
     if pass_error:
         result = str(stdout.decode().strip()) \
                  + str(stderr.decode().strip())
