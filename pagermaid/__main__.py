@@ -38,4 +38,7 @@ if server is not None:
 logs.info("PagerMaid-Modify 已启动，在任何聊天中输入 -help 以获得帮助消息。")
 bot.run_until_disconnected()
 if server is not None:
-    server.stop()
+    try:
+        server.stop()
+    except AttributeError:
+        pass
