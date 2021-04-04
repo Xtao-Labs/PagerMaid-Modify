@@ -125,9 +125,6 @@ with bot:
 
 def before_send(event, hint):
     global report_time
-    exc_info = hint.get("exc_info")
-    if exc_info and isinstance(exc_info[0], CancelledError):
-        return None
     if time() <= report_time + 30:
         report_time = time()
         return None
