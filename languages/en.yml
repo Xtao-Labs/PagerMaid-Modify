@@ -1,0 +1,125 @@
+# English
+
+# main
+web_TypeError: Oops ~ Web interface is configured to bind to an invalid address.
+web_KeyError: Oops ~ Web interface configuration is missing in the config file.
+PhoneNumberInvalidError: Oops ~ The phone number entered is invalid. Please make sure to append country code.
+module: module
+error: loading error
+start: PagerMaid-Modify have started, type -help in any chat for help message.
+
+# utils
+
+msg_ValueError: Oops ~ No messages were successfully obtained!
+isinstance: Oops ~ Length must be an integer!
+
+# init
+platform: Detected platform as 
+platform_load: , proceeding to early load process of PagerMaid.
+platform_unsupported: is not supported, please start PagerMaid on Linux or *BSD.
+error_prefix: Oops ~ 
+python: Please upgrade your python interpreter to at least version 3.6.
+config_error: Oops ~ Please place a valid configuration file in the working directory.
+save_id: The user ID is get successfully.
+
+# listener
+
+command: command
+has_reg: is already registered.
+too_long: Oops ~ The output generated was too long and could not be presented.
+run_error: Oops ~ An error occurred while executing this command.
+report_error: Oops ~ report error.
+use_method: Usage
+
+# account
+## username
+username_des: sets the username.
+arg_error: Invalid argument.
+username_exist: Username is taken.
+username_vaild: Invalid username.
+username_set: Username have been updated.
+username_cancel: Username has been unset.
+username_whatset: Username has been set to
+## name
+
+name_des: Alters the display name.
+name_vaild: Invalid first name.
+name_set: Display name is successfully altered.
+name_whatset: Changed display name to
+## pfp
+pfp_des: Set attachment of message replied to as profile picture.
+pfp_process: Setting profile picture . . .
+pfp_e_notp: Unable to parse attachment as image.
+pfp_e_size: The image dimensions are smaller than minimum requirement.
+pfp_e_img: An error occurred while the server is interpreting the command.
+## bio
+bio_des: Sets the biography to the string in the parameter.
+bio_too_lang: Provided string is too long.
+bio_set: Bio has been altered successfully.
+bio_cancel: Bio has been unset.
+bio_whatset: Bio has been set to
+## rmpfp
+
+rmpfp_des: Deletes defined amount of profile pictures.
+int: integer
+rmpfp_p: Removed
+rmpfp_l: profile picture(s).
+## profile
+profile_des: Shows user profile in a large message.
+profile_process: Generating user profile summary . . .
+profile_e_no: The specified user does not exist.
+profile_e_nou: The username specified does not exist.
+profile_e_nof:  The UserID specified does not correspond to a user.
+profile_e_long: The UserID specified have exceeded the integer limit.
+profile_user: User
+profile_noset: Not set.
+profile_nobio: Not set.
+profile_yes: True
+profile_no: False
+profile_name: Profile
+profile_username: Username
+profile_fname: First name
+pfofile_lname: Last name
+profile_bio: Bio
+profile_gic: Group in common
+profile_verified: Verified
+profile_restricted: Restricted
+profile_type: Type
+
+# avoid
+## ghost
+ghost_des: Toggles ghosting of chat, requires redis.
+redis_dis: Redis is offline, cannot operate.
+ghost_e_mark: Unable to set flag on self.
+ghost_set_f: ChatID
+ghost_set_l: added to ghosted chats.
+ghost_cancel: removed from ghosted chats.
+ghost_e_noexist: Current chat is not ghosted.
+ghost_e_exist: Current chat is ghosted.
+## deny
+deny_des: Toggles denying of chat, requires redis.
+deny_set: added to denied chats.
+deny_cancel: removed from denied chats.
+deny_e_noexist: Current chat is not denied.
+deny_e_exist: Current chat is denied.
+
+# help
+
+help_des: Shows a list of commands or help string of a single command.
+help_list: Commands
+help_send: Issue
+help_see: to view help for a specific command.*
+help_source: Source
+
+#qr
+## genqr
+genqr_des: Generates a QR Code sticker from a specific string.
+genqr_process: Generating QR code...
+genqr_e_encode: Invalid characters in target string.
+genqr_ok: Generated QR Code for
+## parseqr
+parseqr_des: Parse attachment of replied message as a QR Code and output results.
+parseqr_nofile: There are no attachments in the message.
+parseqr_content: Content
+parseqr_e_noqr: Target is not a QR Code.
+parseqr_log: Parsed QR Code with content:
