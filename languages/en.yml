@@ -122,4 +122,4 @@ parseqr_des: Parse attachment of replied message as a QR Code and output results
 parseqr_nofile: There are no attachments in the message.
 parseqr_content: Content
 parseqr_e_noqr: Target is not a QR Code.
-parseqr_log: Parsed QR Code with content:
+parseqr_log: Parsed QR Code with content: 
