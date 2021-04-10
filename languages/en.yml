@@ -15,7 +15,7 @@ isinstance: Oops ~ Length must be an integer!
 
 # init
 platform: Detected platform as 
-platform_load: , proceeding to early load process of PagerMaid.
+platform_load: proceeding to early load process of PagerMaid.
 platform_unsupported: is not supported, please start PagerMaid on Linux or *BSD.
 error_prefix: Oops ~ 
 python: Please upgrade your python interpreter to at least version 3.6.
