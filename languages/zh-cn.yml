@@ -98,3 +98,23 @@ deny_set: 已被添加到自动拒绝对话列表中。
 deny_cancel: 已从自动拒绝对话列表中移除。
 deny_e_noexist: emm...当前对话不在自动拒绝对话列表中。
 deny_e_exist: emm...当前对话在自动拒绝对话列表中。
+
+# help
+help_des: 显示命令列表或单个命令的帮助。
+help_list: 命令列表
+help_send: 发送
+help_see: 以查看特定命令的帮助
+help_source: 源代码
+
+#qr
+## genqr
+genqr_des: 生成 QR Code 。
+genqr_process: 生成QR码中。。。
+genqr_e_encode: 解析目标消息中的字符出现错误。
+genqr_ok: 生成了一张 QR 码。
+## parseqr
+parseqr_des: 回复一张 QR 码进行解析并发送 QR 码内容。
+parseqr_nofile: 回复的消息中没有附件。
+parseqr_content: 内容
+parseqr_e_noqr: 回复的附件不是 QR 码。
+parseqr_log: 已解析一张带有 QR 码的消息，内容：
