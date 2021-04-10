@@ -53,7 +53,7 @@ async def speedtest(message, args, origin_text):
     result = test.results.dict()
     des = (
         f"**Speedtest** \n"
-        f"Server: `result['server']['name']` \n"
+        f"Server: `{result['server']['name']}` \n"
         f"Upload: `{unit_convert(result['upload'])}` \n"
         f"Download: `{unit_convert(result['download'])}` \n"
         f"Latency: `{result['ping']}` \n"
