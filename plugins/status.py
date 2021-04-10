@@ -51,13 +51,16 @@ async def speedtest(message, args, origin_text):
     test.upload()
     test.results.share()
     result = test.results.dict()
-    await message.edit(
+    des = (
         f"**Speedtest** \n"
+        f"Server: `result['server']['name']` \n"
         f"Upload: `{unit_convert(result['upload'])}` \n"
         f"Download: `{unit_convert(result['download'])}` \n"
         f"Latency: `{result['ping']}` \n"
         f"Timestamp: `{result['timestamp']}`"
     )
+    await bot.send_photo(message.chat.id, result['share'], caption=des)
+    await message.delete()
 
 
 async def ping(message, args, origin_text):
@@ -141,7 +144,7 @@ async def topcloud(message, args, origin_text):
 
 def unit_convert(byte):
     """ Converts byte into readable formats. """
-    power = 2 ** 10
+    power = 1000
     zero = 0
     units = {
         0: '',
