@@ -9,7 +9,7 @@ from time import time
 from os import getcwd, makedirs
 from os.path import exists
 from sys import version_info, platform
-from yaml import load, FullLoader
+from yaml import load, FullLoader, safe_load
 from shutil import copyfile
 from redis import StrictRedis
 from logging import getLogger, INFO, DEBUG, ERROR, StreamHandler, basicConfig
@@ -35,9 +35,26 @@ logs.setLevel(INFO)
 try:
     config = load(open(r"config.yml"), Loader=FullLoader)
 except FileNotFoundError:
-    logs.fatal("出错了呜呜呜 ~ 配置文件不存在，正在生成新的配置文件。")
+    logs.fatal("The configuration file does not exist, and a new configuration file is being generated.")
     copyfile(f"{module_dir}/assets/config.gen.yml", "config.yml")
     exit(1)
+
+# i18n
+lang_dict: dict = {}
+
+try:
+    with open(f"languages/{config['application_language']}.yml", "r", encoding="utf-8") as f:
+        lang_dict = safe_load(f)
+except Exception as e:
+    print("Reading language YAML file failed")
+    print(e)
+    exit(1)
+
+
+def lang(text: str) -> str:
+    """ i18n """
+    result = lang_dict.get(text, text)
+    return result
 
 
 if strtobool(config['debug']):
@@ -49,17 +66,17 @@ else:
 if platform == "linux" or platform == "linux2" or platform == "darwin" or platform == "freebsd7" \
         or platform == "freebsd8" or platform == "freebsdN" or platform == "openbsd6":
     logs.info(
-        "将平台检测为“ " + platform + "，进入PagerMaid的早期加载过程。"
+        lang('platform') + platform + lang('platform_load')
     )
 else:
     logs.error(
-        "出错了呜呜呜 ~ 你的平台 " + platform + " 不支持运行 PagerMaid，请在Linux或 *BSD 上启动 PagerMaid。"
+        f"{lang('error_prefix')} {lang('platform')}" + platform + lang('platform_unsupported')
     )
     exit(1)
 
 if version_info[0] < 3 or version_info[1] < 6:
     logs.error(
-        "出错了呜呜呜 ~ 请将您的 python 升级到至少3.6版。"
+        f"{lang('error_prefix')} {lang('python')}"
     )
     exit(1)
 
@@ -94,7 +111,7 @@ except KeyError:
     redis_db = 14
 if api_key is None or api_hash is None:
     logs.info(
-        "出错了呜呜呜 ~ 请在工作目录中放置一个有效的配置文件。"
+        lang('config_error')
     )
     exit(1)
 
@@ -120,7 +137,7 @@ async def save_id():
         sentry_sdk.set_user({"id": me.id, "name": me.first_name, "username": me.username, "ip_address": "{{auto}}"})
     else:
         sentry_sdk.set_user({"id": me.id, "name": me.first_name, "ip_address": "{{auto}}"})
-    logs.info("设置用户标识成功。")
+    logs.info(lang('save_id'))
 
 
 with bot:

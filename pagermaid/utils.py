@@ -9,7 +9,13 @@ from re import sub, IGNORECASE
 from asyncio import create_subprocess_shell
 from asyncio.subprocess import PIPE
 from youtube_dl import YoutubeDL
-from pagermaid import module_dir, bot
+from pagermaid import module_dir, bot, lang_dict
+
+
+def lang(text: str) -> str:
+    """ i18n """
+    result = lang_dict.get(text, text)
+    return result
 
 
 async def upload_attachment(file_path, chat_id, reply_id, caption=None, preview=None, document=None):
@@ -41,7 +47,7 @@ async def execute(command, pass_error=True):
     try:
         stdout, stderr = await executor.communicate()
     except:
-        return "请求错误。"
+        return lang('error')
     if pass_error:
         result = str(stdout.decode().strip()) \
                  + str(stderr.decode().strip())
@@ -62,6 +68,7 @@ async def attach_log(plaintext, chat_id, file_name, reply_id=None, caption=None)
         caption=caption
     )
     remove(file_name)
+
 
 async def attach_report(plaintext, file_name, reply_id=None, caption=None):
     """ Attach plaintext as logs. """
@@ -91,6 +98,7 @@ async def attach_report(plaintext, file_name, reply_id=None, caption=None):
             pass
     remove(file_name)
 
+
 async def obtain_message(context):
     """ Obtains a message from either the reply message or command arguments. """
     reply = await context.get_reply_message()
@@ -98,13 +106,13 @@ async def obtain_message(context):
     if reply and not message:
         message = reply.text
     if not message:
-        raise ValueError("出错了呜呜呜 ~ 没有成功获取到消息！")
+        raise ValueError(lang('msg_ValueError'))
     return message
 
 
 async def random_gen(selection, length=64):
     if not isinstance(length, int):
-        raise ValueError("出错了呜呜呜 ~ 长度必须是整数!")
+        raise ValueError(lang('isinstance'))
     return await execute(f"head -c 65536 /dev/urandom | tr -dc {selection} | head -c {length} ; echo \'\'")
 
 
@@ -123,10 +131,10 @@ async def fetch_youtube_audio(url, chat_id, reply_id, string_2):
     if not exists("audio.mp3"):
         return False
     await bot.send_file(
-         chat_id,
-         "audio.mp3",
-         reply_to=reply_id,
-         caption=str(string_2)
+        chat_id,
+        "audio.mp3",
+        reply_to=reply_id,
+        caption=str(string_2)
     )
     remove("audio.mp3")
     return True

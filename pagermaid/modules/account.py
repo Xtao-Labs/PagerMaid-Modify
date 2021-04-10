@@ -10,16 +10,17 @@ from telethon.tl.functions.users import GetFullUserRequest
 from telethon.tl.types import InputPhoto, MessageMediaPhoto, MessageEntityMentionName
 from struct import error as StructError
 from pagermaid import bot, log
+from pagermaid.utils import lang
 from pagermaid.listener import listener
 
 
 @listener(is_plugin=False, outgoing=True, command="username",
-          description="通过命令快捷设置道纹（不支持回复）",
+          description=lang('username_des'),
           parameters="<username>")
 async def username(context):
-    """ 重新配置您的用户名。 """
+    """ Reconfigure your username. """
     if len(context.parameter) > 1:
-        await context.edit("出错了呜呜呜 ~ 您好像输入了一个无效的参数。")
+        await context.edit(f"{lang('error_prefix')}{lang('arg_error')}｝")
     if len(context.parameter) == 1:
         result = context.parameter[0]
     else:
@@ -27,20 +28,20 @@ async def username(context):
     try:
         await bot(UpdateUsernameRequest(result))
     except UsernameOccupiedError:
-        await context.edit("出错了呜呜呜 ~ 道纹已存在。")
+        await context.edit(f"{lang('error_prefix')}")
         return
     except UsernameInvalidError:
-        await context.edit("出错了呜呜呜 ~ 您好像输入了一个无效的道纹。")
+        await context.edit(f"{lang('error_prefix')}{lang('username_vaild')}")
         return
-    await context.edit("道纹设置完毕。")
+    await context.edit(lang('username_set'))
     if result == "":
-        await log("道纹已被取消。")
+        await log(lang('username_cancel'))
         return
-    await log(f"道纹已被设置为 `{result}`.")
+    await log(f"{lang('username_whatset')}`{result}`")
 
 
 @listener(is_plugin=False, outgoing=True, command="name",
-          description="换个名称。（不支持回复）",
+          description=lang('name_des'),
           parameters="<first name> <last name>")
 async def name(context):
     """ Updates your display name. """
@@ -51,36 +52,36 @@ async def name(context):
         first_name = context.parameter[0]
         last_name = " "
     else:
-        await context.edit("出错了呜呜呜 ~ 您好像输入了一个无效的参数。")
+        await context.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
     try:
         await bot(UpdateProfileRequest(
             first_name=first_name,
             last_name=last_name))
     except FirstNameInvalidError:
-        await context.edit("出错了呜呜呜 ~ 您好像输入了一个无效的 first name.")
+        await context.edit(f"{lang('error_prefix')}{lang('name_vaild')}")
         return
-    await context.edit("显示名称已成功更改。")
+    await context.edit(lang('name_set'))
     if last_name != " ":
-        await log(f"显示名称已被更改为 `{first_name} {last_name}`.")
+        await log(f"{lang('name_whatset')}`{first_name} {last_name}`.")
     else:
-        await log(f"显示名称已被更改为 `{first_name}`.")
+        await log(f"{lang('name_whatset')}`{first_name}`.")
 
 
 @listener(is_plugin=False, outgoing=True, command="pfp",
-          description="回复某条带附件的消息然后把它变成咱的头像")
+          description=lang('pfp_des'))
 async def pfp(context):
     """ Sets your profile picture. """
     reply = await context.get_reply_message()
     photo = None
-    await context.edit("设置头像中 . . .")
+    await context.edit(lang('pfp_process'))
     if reply.media:
         if isinstance(reply.media, MessageMediaPhoto):
             photo = await bot.download_media(message=reply.photo)
         elif "image" in reply.media.document.mime_type.split('/'):
             photo = await bot.download_file(reply.media.document)
         else:
-            await context.edit("出错了呜呜呜 ~ 无法将此附件解析为图片。")
+            await context.edit(f"{lang('error_prefix')}{lang('pfp_e_notp')}")
 
     if photo:
         try:
@@ -90,11 +91,11 @@ async def pfp(context):
             remove(photo)
             await context.edit("头像修改成功啦 ~")
         except PhotoCropSizeSmallError:
-            await context.edit("出错了呜呜呜 ~ 此图像尺寸小于最小要求。")
+            await context.edit(f"{lang('error_prefix')}{lang('pfp_e_size')}")
         except ImageProcessFailedError:
-            await context.edit("出错了呜呜呜 ~ 服务器解释命令时发生错误。")
+            await context.edit(f"{lang('error_prefix')}{lang('pfp_e_img')}")
         except PhotoExtInvalidError:
-            await context.edit("出错了呜呜呜 ~ 无法将此附件解析为图片。")
+            await context.edit(f"{lang('error_prefix')}{lang('pfp_e_notp')}")
 
 
 @listener(is_plugin=False, outgoing=True, command="bio",
@@ -105,18 +106,18 @@ async def bio(context):
     try:
         await bot(UpdateProfileRequest(about=context.arguments))
     except AboutTooLongError:
-        await context.edit("出错了呜呜呜 ~ 情报太长啦")
+        await context.edit(f"{lang('error_prefix')}{lang('bio_too_lang')}")
         return
-    await context.edit("此公开情报设置成功啦 ~")
+    await context.edit(lang('bio_set'))
     if context.arguments == "":
-        await log("公开的情报成功关闭啦")
+        await log(lang('bio_cancel'))
         return
-    await log(f"公开的情报已被设置为 `{context.arguments}`.")
+    await log(f"{lang('bio_whatset')}`{context.arguments}`.")
 
 
 @listener(is_plugin=False, outgoing=True, command="rmpfp",
-          description="删除指定数量的咱的头像",
-          parameters="<整数>")
+          description=lang('rmpfp_des'),
+          parameters=f"<{lang('int')}>")
 async def rmpfp(context):
     """ Removes your profile picture. """
     group = context.text[8:]
@@ -142,19 +143,19 @@ async def rmpfp(context):
             )
         )
     await bot(DeletePhotosRequest(id=input_photos))
-    await context.edit(f"`删除了 {len(input_photos)} 张头像。`")
+    await context.edit(f"`{lang('rmpfp_p')}{len(input_photos)} {lang('rmpfp_l')}`")
 
 
 @listener(is_plugin=False, outgoing=True, command="profile",
-          description="生成一位用户简介 ~ 消息有点长",
+          description=lang('profile_des'),
           parameters="<username>")
 async def profile(context):
     """ Queries profile of a user. """
     if len(context.parameter) > 1:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
 
-    await context.edit("正在生成用户简介摘要中 . . .")
+    await context.edit(lang('profile_process'))
     if context.reply_to_msg_id:
         reply_message = await context.get_reply_message()
         user_id = reply_message.from_id
@@ -175,38 +176,38 @@ async def profile(context):
             target_user = await context.client(GetFullUserRequest(user_object.id))
         except (TypeError, ValueError, OverflowError, StructError) as exception:
             if str(exception).startswith("Cannot find any entity corresponding to"):
-                await context.edit("出错了呜呜呜 ~ 指定的用户不存在。")
+                await context.edit(f"{lang('error_prefix')}{lang('profile_e_no')}")
                 return
             if str(exception).startswith("No user has"):
-                await context.edit("出错了呜呜呜 ~ 指定的道纹不存在。")
+                await context.edit(f"{lang('error_prefix')}{lang('profile_e_nou')}")
                 return
             if str(exception).startswith("Could not find the input entity for") or isinstance(exception, StructError):
-                await context.edit("出错了呜呜呜 ~ 无法通过此 UserID 找到对应的用户。")
+                await context.edit(f"{lang('error_prefix')}{lang('profile_e_nof')}")
                 return
             if isinstance(exception, OverflowError):
-                await context.edit("出错了呜呜呜 ~ 指定的 UserID 已超出长度限制，您确定输对了？")
+                await context.edit(f"{lang('error_prefix')}{lang('profile_e_long')}")
                 return
             raise exception
-    user_type = "Bot" if target_user.user.bot else "用户"
+    user_type = "Bot" if target_user.user.bot else lang('profile_user')
     username_system = f"@{target_user.user.username}" if target_user.user.username is not None else (
-        "喵喵喵 ~ 好像没有设置")
+        lang('profile_noset'))
     first_name = target_user.user.first_name.replace("\u2060", "")
     last_name = target_user.user.last_name.replace("\u2060", "") if target_user.user.last_name is not None else (
-        "喵喵喵 ~ 好像没有设置"
+        lang('profile_noset')
     )
-    biography = target_user.about if target_user.about is not None else "没有公开的情报"
-    verified = "是" if target_user.user.verified else "否"
-    restricted = "是" if target_user.user.restricted else "否"
-    caption = f"**用户简介:** \n" \
-              f"道纹: {username_system} \n" \
+    biography = target_user.about if target_user.about is not None else lang('profile_nobio')
+    verified = lang('profile_yes') if target_user.user.verified else lang('profile_no')
+    restricted = lang('profile_yes') if target_user.user.restricted else lang('profile_no')
+    caption = f"**{lang('profile_name')}:** \n" \
+              f"{lang('profile_username')}: {username_system} \n" \
               f"ID: {target_user.user.id} \n" \
-              f"名字: {first_name} \n" \
-              f"姓氏: {last_name} \n" \
-              f"目前已知的情报: {biography} \n" \
-              f"共同裙: {target_user.common_chats_count} \n" \
-              f"官方认证: {verified} \n" \
-              f"受限制: {restricted} \n" \
-              f"类型: {user_type} \n" \
+              f"{lang('profile_fname')}: {first_name} \n" \
+              f"{lang('pfofile_lname')}: {last_name} \n" \
+              f"{lang('profile_bio')}: {biography} \n" \
+              f"{lang('profile_gic')}: {target_user.common_chats_count} \n" \
+              f"{lang('profile_verified')}: {verified} \n" \
+              f"{lang('profile_restricted')}: {restricted} \n" \
+              f"{lang('profile_type')}: {user_type} \n" \
               f"[{first_name}](tg://user?id={target_user.user.id})"
     photo = await context.client.download_profile_photo(
               target_user.user.id,

@@ -1,0 +1,100 @@
+# Chinese (Simplified)
+
+# main
+web_TypeError: 出错了呜呜呜 ~ Web 界面配置绑定到了一个无效地址。
+web_KeyError: 出错了呜呜呜 ~ 配置文件中缺少 Web 界面配置。
+PhoneNumberInvalidError: 出错了呜呜呜 ~ 输入的电话号码无效。 请确保附加国家代码。
+module: 模块
+error: 加载出错
+start: PagerMaid-Modify 已启动，在任何聊天中输入 -help 以获得帮助消息。
+
+# utils
+msg_ValueError: 出错了呜呜呜 ~ 没有成功获取到消息！
+isinstance: 出错了呜呜呜 ~ 长度必须是整数!
+
+# init
+platform: 将平台检测为“
+platform_load: ，进入PagerMaid的早期加载过程。
+platform_unsupported: ，不支持运行 PagerMaid，请在Linux或 *BSD 上启动 PagerMaid。
+error_prefix: 出错了呜呜呜 ~
+python: 请将您的 python 升级到至少3.6版。
+config_error: 出错了呜呜呜 ~ 请在工作目录中放置一个有效的配置文件。
+save_id: 设置用户标识成功。
+
+# listener
+command: 命令
+has_reg: 已经被注册。
+too_long: 出错了呜呜呜 ~ 生成的输出太长，无法显示。
+run_error: 出错了呜呜呜 ~ 执行此命令时发生错误。
+report_error: 上报错误出错了呜呜呜 ~
+use_method: 使用方法
+
+# account
+## username
+username_des: 通过命令快捷设置道纹（不支持回复）
+arg_error: 您好像输入了一个无效的参数。
+username_exist: 道纹已存在。
+username_vaild: 您好像输入了一个无效的道纹。
+username_set: 道纹设置完毕。
+username_cancel: 道纹已被取消。
+username_whatset: 道纹已被设置为
+## name
+name_des: 换个名称。（不支持回复）
+name_vaild: 您好像输入了一个无效的 first name.
+name_set: 显示名称已成功更改。
+name_whatset: 显示名称已被更改为
+## pfp
+pfp_des: 回复某条带附件的消息然后把它变成咱的头像
+pfp_process: 设置头像中 . . .
+pfp_e_notp: 无法将此附件解析为图片。
+pfp_e_size: 此图像尺寸小于最小要求。
+pfp_e_img: 此图像可以已经损坏。
+## bio
+bio_des: 设置咱的公开情报
+bio_too_lang: 情报太长啦
+bio_set: 公开情报设置成功啦 ~
+bio_cancel: 公开情报已被取消。
+bio_whatset: 公开的情报已被设置为
+## rmpfp
+rmpfp_des: 删除指定数量的咱的头像
+int: 数字
+rmpfp_p: 删除了
+rmpfp_l: 张头像。
+## profile
+profile_des: 生成一位用户简介 ~ 消息有点长
+profile_process: 正在生成用户简介摘要中 . . .
+profile_e_no: 指定的用户不存在。
+profile_e_nou: 指定的道纹不存在。
+profile_e_nof: 无法通过此 UserID 找到对应的用户。
+profile_e_long: 指定的 UserID 已超出长度限制，您确定输对了？
+profile_user: 用户
+profile_noset: 喵喵喵 ~ 好像没有设置
+profile_nobio: 没有公开的情报
+profile_yes: 是
+profile_no: 否
+profile_name: 用户简介
+profile_username: 道纹
+profile_fname: 名字
+pfofile_lname: 姓氏
+profile_bio: 目前已知的情报
+profile_gic: 共同裙
+profile_verified: 官方认证
+profile_restricted: 受限制
+profile_type: 类型
+
+# avoid
+## ghost
+ghost_des: 开启对话的自动已读，需要 Redis
+redis_dis: Redis 好像离线了，无法执行命令。
+ghost_e_mark: 在？为什么要在收藏夹里面用？
+ghost_set_f: 已成功将
+ghost_set_l: 添加到自动已读对话列表中。
+ghost_cancel: 从自动已读对话列表中移除。
+ghost_e_noexist: emm...当前对话不存在于自动已读对话列表中。
+ghost_e_exist: emm...当前对话存在于自动已读对话列表中。
+## deny
+deny_des: 拒绝聊天功能，需要 redis
+deny_set: 已被添加到自动拒绝对话列表中。
+deny_cancel: 已从自动拒绝对话列表中移除。
+deny_e_noexist: emm...当前对话不在自动拒绝对话列表中。
+deny_e_exist: emm...当前对话在自动拒绝对话列表中。
