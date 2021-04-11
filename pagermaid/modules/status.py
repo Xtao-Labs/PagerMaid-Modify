@@ -96,13 +96,16 @@ async def speedtest(context):
     test.upload()
     test.results.share()
     result = test.results.dict()
-    await context.edit(
+    des = (
         f"**Speedtest** \n"
+        f"Server: `{result['server']['name']}` \n"
         f"Upload: `{unit_convert(result['upload'])}` \n"
         f"Download: `{unit_convert(result['download'])}` \n"
         f"Latency: `{result['ping']}` \n"
         f"Timestamp: `{result['timestamp']}`"
     )
+    await context.client.send_file(context.chat.id, result['share'], caption=des)
+    await context.delete()
 
 
 @listener(is_plugin=False, outgoing=True, command="connection",
@@ -202,7 +205,7 @@ async def topcloud(context):
 
 def unit_convert(byte):
     """ Converts byte into readable formats. """
-    power = 2 ** 10
+    power = 1000
     zero = 0
     units = {
         0: '',
