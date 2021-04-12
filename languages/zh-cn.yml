@@ -339,3 +339,47 @@ del_notification: 删除了一条消息。
 del_BadRequestError: 出错了呜呜呜 ~ 缺少删除此消息的权限。
 ## send_prune_notify
 spn_deleted: 删除了
+
+# status
+## sysinfo
+sysinfo_des: 通过 neofetch 检索系统信息.
+sysinfo_loading: 加载系统信息中 . . .
+## fortune
+fortune_des: 读取 fortune cookies 信息。
+fortune_not_exist: 出错了呜呜呜 ~ 此系统上没有 fortune cookies
+## fbcon
+fbcon_des: 拍摄当前绑定的帧缓冲控制台的屏幕截图。
+fbcon_processing: 拍摄帧缓冲控制台的屏幕截图中 . . .
+fbcon_no_fbdump: 出错了呜呜呜 ~ 此系统上没有安装 fbdump
+fbcon_no_ImageMagick: 出错了呜呜呜 ~ 此系统上没有安装 ImageMagick
+fbcon_no_permission: 出错了呜呜呜 ~ 运行 PagerMaid-Modify 的用户不在视频组中。
+fbcon_caption: 绑定的帧缓冲区的屏幕截图。
+fbcon_error: 出错了呜呜呜 ~ 由于发生意外错误，导致文件生成失败。请确保已安装 apt 包 fbcat 和 imagemagick，且你的机器有显卡。
+## status
+status_des: 输出 PagerMaid-Modify 的运行状态。
+status_online: 在线
+status_offline: 离线
+status_hint: PagerMaid-Modify 运行状态
+status_name: 主机名
+status_platform: 主机平台
+status_release: Kernel 版本
+status_python: Python 版本
+status_telethon: Telethon 版本
+status_db: 数据库状态
+status_dialogs: 对话总数
+## speedtest
+speedtest_des: 执行 speedtest 脚本并发送结果。
+speedtest_processing: 执行测试脚本 . . .
+## connection
+connection_des: 显示运行 PagerMaid-Modify 的服务器和 Telegram 服务器之间的连接信息。
+connection_hint: 连接信息
+connection_country: 国家
+connection_dc: 连接到的数据中心
+connection_nearest_dc: 最近的数据中心
+## ping
+ping_des: 计算运行 PagerMaid-Modify 的服务器和 Telegram 服务器之间的延迟。
+## topcloud
+topcloud_des: 生成一张资源占用的词云图片。
+topcloud_processing: 生成图片中 . . .
+topcloud_caption: 正在运行的进程。
+topcloud_success: 生成了一张资源占用的词云图片。
