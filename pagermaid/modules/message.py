@@ -140,7 +140,7 @@ async def re(context):
         for nums in range(0, num):
             await reply.forward_to(int(context.chat_id))
     else:
-        await context.edit(lang('re_not_reply'))
+        await context.edit(lang('not_reply'))
 
 
 @listener(is_plugin=False, outgoing=True, command="leave",

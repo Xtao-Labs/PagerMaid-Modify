@@ -248,7 +248,7 @@ re_des: 在当前会话复读回复的消息。（需要回复一条消息）
 re_parameters: <次数>
 re_too_big: 呜呜呜出错了...这个数字太大惹
 re_arg_error: 呜呜呜出错了...可能参数包含了数字以外的符号
-re_not_reply: 出错了呜呜呜 ~ 您好像没有回复一条消息。
+not_reply: 出错了呜呜呜 ~ 您好像没有回复一条消息。
 ## leave
 leave_res: 说 “再见” 然后离开会话。
 leave_bye: 贵群真是浪费我的时间，再见。
@@ -320,3 +320,22 @@ apt_plugin_maintainer: 作者
 apt_plugin_size: 大小
 apt_plugin_support: 支持周期
 apt_plugin_des_short: 说明
+
+# prune
+## prune
+prune_des: 以此命令回复某条消息，将删除最新一条消息至该条消息之间的所有消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。（非群组管理员只删除自己的消息）
+prune_hint1: 批量删除了
+prune_hint2: 条消息。
+## selfprune
+sp_des: 删除当前对话您发送的特定数量的消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。入群消息非管理员无法删除。（倒序）当数字足够大时即可实现删除所有消息。
+sp_parameters: <数量>
+sp_hint: 自行发送的
+## yourprune
+yp_des: 删除当前对话您回复用户所发送的特定数量的消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。（倒序、需要删除消息权限）当数字足够大时即可实现删除所有消息。
+yp_hint: 回复用户所发送的
+## del
+del_des: 删除当前对话您回复的那条消息。（需要回复一条消息）
+del_notification: 删除了一条消息。
+del_BadRequestError: 出错了呜呜呜 ~ 缺少删除此消息的权限。
+## send_prune_notify
+spn_deleted: 删除了
