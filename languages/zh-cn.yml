@@ -21,13 +21,10 @@ python: 请将您的 python 升级到至少3.6版。
 config_error: 出错了呜呜呜 ~ 请在工作目录中放置一个有效的配置文件。
 save_id: 设置用户标识成功。
 
-<<<<<<< Updated upstream
-=======
 # modules_init
 modules_init_loading_modules: 加载内置模块
 modules_init_loading_plugins: 加载插件
 
->>>>>>> Stashed changes
 # listener
 command: 命令
 has_reg: 已经被注册。
@@ -105,10 +102,6 @@ deny_set: 已被添加到自动拒绝对话列表中。
 deny_cancel: 已从自动拒绝对话列表中移除。
 deny_e_noexist: emm...当前对话不在自动拒绝对话列表中。
 deny_e_exist: emm...当前对话在自动拒绝对话列表中。
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 # help
 help_des: 显示命令列表或单个命令的帮助。
 help_list: 命令列表
@@ -116,11 +109,7 @@ help_send: 发送
 help_see: 以查看特定命令的帮助
 help_source: 源代码
 
-<<<<<<< Updated upstream
-#qr
-=======
 # qr
->>>>>>> Stashed changes
 ## genqr
 genqr_des: 生成 QR Code 。
 genqr_process: 生成QR码中。。。
@@ -131,9 +120,6 @@ parseqr_des: 回复一张 QR 码进行解析并发送 QR 码内容。
 parseqr_nofile: 回复的消息中没有附件。
 parseqr_content: 内容
 parseqr_e_noqr: 回复的附件不是 QR 码。
-<<<<<<< Updated upstream
-parseqr_log: 已解析一张带有 QR 码的消息，内容：
-=======
 parseqr_log: 已解析一张带有 QR 码的消息，内容：
 
 # captions
@@ -289,4 +275,48 @@ hitokoto_type_poem: 诗词
 hitokoto_type_netease_music: 网易云
 hitokoto_type_philosophy: 哲学
 hitokoto_type_meme: 抖机灵
->>>>>>> Stashed changes
+
+# plugin
+## apt
+apt_des: 用于管理安装到 PagerMaid-Modify 的插件。
+apt_parameters: "{update|search|show|status|install|remove|enable|disable|upload} <插件名称/文件>"
+apt_processing: 安装插件中 . . .
+apt_no_py: 出错了呜呜呜 ~ 无法从附件获取插件文件。
+apt_plugin: 插件
+apt_installed: 已安装
+apt_reboot: PagerMaid-Modify 正在重新启动。
+apt_install_success: 安装成功
+apt_not_found: 错误：没有找到插件
+apt_install_failed: 安装失败
+apt_no_update: 无需更新 
+apt_remove_success: 成功删除插件
+apt_remove: 删除插件
+apt_removed_plugins: 已删除的插件
+apt_not_exist: 出错了呜呜呜 ~ 指定的插件不存在。
+apt_no_running_plugins: 没有运行中的插件。
+apt_no_load_falied_plugins: 没有运行中的插件。
+apt_no_disabled_plugins: 没有关闭的插件
+apt_plugin_list: 插件列表
+apt_plugin_running: 运行中
+apt_plugin_disabled: 已关闭
+apt_plugin_failed: 加载失败
+apt_enable: 已启用
+apt_disable: 已禁用
+apt_uploading: 上传插件中 . . .
+apt_updated: 已更新
+apt_why_not_install_a_plugin: 安装一个仓库内插件再试试？
+apt_loading_from_online_but_nothing_need_to_update: 正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n**没有需要更新的插件。**
+apt_loading_from_online_and_updating: 正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n正在更新插件...
+apt_reading_list: 正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n
+apt_search_no_name: 没插件名我怎么搜索？
+apt_search_not_found: 未在插件仓库中搜索到相关插件。
+apt_search_result_hint: 以下是插件仓库的搜索结果
+apt_search_supporting: 仍在周期中
+apt_search_not_supporting: 已弃疗
+apt_plugin_name: 插件名
+apt_plugin_ver: 版本
+apt_plugin_section: 分类
+apt_plugin_maintainer: 作者
+apt_plugin_size: 大小
+apt_plugin_support: 支持周期
+apt_plugin_des_short: 说明
