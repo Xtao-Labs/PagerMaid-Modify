@@ -428,3 +428,26 @@ chat_already_join1: 您早已成功加入
 chat_already_join2: 用户群。
 chat_error: 出错了呜呜呜 ~ 请尝试手动加入 @PagerMaid_Modify
 chat_join_success: 您已成功加入
+
+#update
+## update
+update_des: 从远程来源检查更新，并将其安装到 PagerMaid-Modify。
+update_processing: 正在检查远程源以进行更新 . . ."
+update_platform_version: 系统版本号
+update_git_version: Git 版本号
+update_local_git_change: 本地修改
+update_hash: 本地修改
+update_date: 提交时间
+update_NoSuchPathError: 目录不存在
+update_InvalidGitRepositoryError: 此 PagerMaid-Modify 实例不是从源安装,请通过您的本机软件包管理器进行升级。
+update_GitCommandError: 出错了呜呜呜 ~ 收到了来自 git 的错误
+update_not_active_branch: 出错了呜呜呜 ~ 该分支未维护
+update_in_branch: 在分支
+update_is_updated: 中已是最新。
+update_found_update_in_branch: 找到了更新，存在于分支
+update_change_log: 更新日志
+update_log_too_big: 更新日志太长，正在附加文件。
+update_hint: 请使用以下命令进行更新
+update_found_pulling: 找到更新，正在拉取 . . .
+update_success: 更新成功
+update_failed: 更新失败
