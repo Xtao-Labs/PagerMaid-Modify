@@ -12,10 +12,11 @@ from PIL import Image
 from math import floor
 from pagermaid import bot
 from pagermaid.listener import listener
+from pagermaid.utils import lang
 
 
 @listener(is_plugin=False, outgoing=True, command="sticker",
-          description="收集回复的图像/贴纸作为贴纸，通过参数指定 emoji 以设置非默认的 emoji。",
+          description=lang('sticker_des'),
           parameters="<emoji>")
 async def sticker(context):
     """ Fetches images/stickers and add them to your pack. """
@@ -27,7 +28,7 @@ async def sticker(context):
     animated = False
     emoji = ""
     try:
-        await context.edit("收集图像/贴纸中 . . .")
+        await context.edit(lang('sticker_processing'))
     except:
         pass
     if message and message.media:
@@ -37,7 +38,7 @@ async def sticker(context):
         elif "image" in message.media.document.mime_type.split('/'):
             photo = BytesIO()
             try:
-                await context.edit("下载图片中 . . .")
+                await context.edit(lang('sticker_downloading'))
             except:
                 pass
             await bot.download_file(message.media.document, photo)
@@ -60,13 +61,13 @@ async def sticker(context):
             photo = 1
         else:
             try:
-                await context.edit("`出错了呜呜呜 ~ 不支持此文件类型。`")
+                await context.edit(lang('sticker_type_not_support'))
             except:
                 pass
             return
     else:
         try:
-            await context.edit("`出错了呜呜呜 ~ 请回复带有图片/贴纸的消息。`")
+            await context.edit(lang('sticker_reply_not_sticker'))
         except:
             pass
         return
@@ -87,13 +88,13 @@ async def sticker(context):
                 emoji = split_strings[1]
 
         pack_name = f"{user.username}_{pack}"
-        pack_title = f"@{user.username} 的私藏 ({pack})"
+        pack_title = f"@{user.username} {lang('sticker_pack_title')} ({pack})"
         command = '/newpack'
         file = BytesIO()
 
         if not animated:
             try:
-                await context.edit("调整图像大小中 . . .")
+                await context.edit(lang('sticker_resizing'))
             except:
                 pass
             image = await resize_image(photo)
@@ -108,7 +109,7 @@ async def sticker(context):
             request.Request(f'http://t.me/addstickers/{pack_name}'), context=ssl.create_default_context(cafile=certifi.where()))
         if not response.status == 200:
             try:
-                await context.edit("连接到 Telegram 服务器失败 . . .")
+                await context.edit(lang('sticker_telegram_server_error'))
             except:
                 pass
             return
@@ -128,9 +129,9 @@ async def sticker(context):
 A pack can't have more than 120 stickers at the moment.":
                             pack += 1
                             pack_name = f"{user.username}_{pack}"
-                            pack_title = f"@{user.username} 的私藏 ({pack})"
+                            pack_title = f"@{user.username} {lang('sticker_pack_title')} ({pack})"
                             try:
-                                await context.edit("切换到私藏 " + str(pack) + " 上一个贴纸包已满 . . .")
+                                await context.edit(lang('sticker_change_pack_to') + str(pack) + lang('sticker_last_is_full'))
                             except:
                                 pass
                             await conversation.send_message(pack_name)
@@ -140,7 +141,7 @@ A pack can't have more than 120 stickers at the moment.":
                                                     context, file, emoji)
                                 try:
                                     await context.edit(
-                                        f"这张图片/贴纸已经被添加到 [这个](t.me/addstickers/{pack_name}) 贴纸包。",
+                                        f"{lang('sticker_has_been_added')} [{lang('sticker_this')}](t.me/addstickers/{pack_name}) {lang('sticker_pack')}",
                                         parse_mode='md')
                                 except:
                                     pass
@@ -157,7 +158,7 @@ A pack can't have more than 120 stickers at the moment.":
                 except AlreadyInConversationError:
                     if not sticker_already:
                         try:
-                            await context.edit("另一个命令正在添加贴纸, 重新尝试中")
+                            await context.edit(lang('sticker_another_running'))
                         except:
                             pass
                         sticker_already = True
@@ -168,7 +169,7 @@ A pack can't have more than 120 stickers at the moment.":
                     raise
         else:
             try:
-                await context.edit("贴纸包不存在，正在创建 . . .")
+                await context.edit(lang('sticker_no_pack_exist_creating'))
             except:
                 pass
             async with bot.conversation('Stickers') as conversation:
@@ -177,7 +178,7 @@ A pack can't have more than 120 stickers at the moment.":
 
         try:
             await context.edit(
-                f"这张图片/贴纸已经被添加到 [这个](t.me/addstickers/{pack_name}) 贴纸包。",
+                f"{lang('sticker_has_been_added')} [{lang('sticker_this')}](t.me/addstickers/{pack_name}) {lang('sticker_pack')}",
                 parse_mode='md')
         except:
             pass
@@ -218,7 +219,7 @@ async def add_sticker(conversation, command, pack_title, pack_name, animated, me
 async def upload_sticker(animated, message, context, file, conversation):
     if animated:
         try:
-            await context.edit("上传动图中 . . .")
+            await context.edit(lang('us_animated_uploading'))
         except:
             pass
         await conversation.send_file("AnimatedSticker.tgs", force_document=True)
@@ -226,7 +227,7 @@ async def upload_sticker(animated, message, context, file, conversation):
     else:
         file.seek(0)
         try:
-            await context.edit("上传图片中 . . .")
+            await context.edit(lang('us_static_uploading'))
         except:
             pass
         await conversation.send_file(file, force_document=True)

@@ -8,25 +8,25 @@ from asyncio import sleep
 from requests.exceptions import MissingSchema, InvalidURL, ConnectionError
 from pagermaid import log, bot
 from pagermaid.listener import listener
-from pagermaid.utils import attach_log, execute
+from pagermaid.utils import attach_log, execute, lang
 from telethon.errors.rpcerrorlist import UserAlreadyParticipantError
 from telethon.tl.functions.messages import ImportChatInviteRequest
 
 
 @listener(is_plugin=False, outgoing=True, command="sh",
-          description="在 Telegram 上远程执行 Shell 命令。",
-          parameters="<命令>")
+          description=lang('sh_des'),
+          parameters=lang('sh_parameters'))
 async def sh(context):
     """ Use the command-line from Telegram. """
     user = getuser()
     command = context.arguments
     hostname = node()
     if context.is_channel and not context.is_group:
-        await context.edit("`出错了呜呜呜 ~ 当前 PagerMaid-Modify 的配置禁止在频道中执行 Shell 命令。`")
+        await context.edit(lang('sh_channel'))
         return
 
     if not command:
-        await context.edit("`出错了呜呜呜 ~ 无效的参数。`")
+        await context.edit(lang('arg_error'))
         return
 
     if geteuid() == 0:
@@ -61,21 +61,21 @@ async def sh(context):
             )
     else:
         return
-    await log(f"远程执行 Shell 命令： `{command}`")
+    await log(f"{lang('sh_success')}: `{command}`")
 
 
 @listener(is_plugin=False, outgoing=True, command="restart", diagnostics=False,
-          description="使 PagerMaid-Modify 重新启动")
+          description=lang('restart_des'))
 async def restart(context):
     """ To re-execute PagerMaid. """
     if not context.text[0].isalpha():
-        await context.edit("尝试重新启动 PagerMaid-Modify 。")
-        await log("PagerMaid-Modify 重新启动。")
+        await context.edit(lang('restart_processing'))
+        await log(lang('restart_log'))
         await context.client.disconnect()
 
 
 @listener(is_plugin=False, outgoing=True, command="trace",
-          description="跟踪 URL 的重定向。",
+          description=lang('trace_des'),
           parameters="<url>")
 async def trace(context):
     """ Trace URL redirects. """
@@ -88,7 +88,7 @@ async def trace(context):
             pass
         else:
             url = "https://" + url
-        await context.edit("跟踪重定向中 . . .")
+        await context.edit(lang('trace_processing'))
         result = str("")
         for url in url_tracer(url):
             count = 0
@@ -97,45 +97,43 @@ async def trace(context):
             else:
                 result = url
             if count == 128:
-                result += "\n\n出错了呜呜呜 ~ 超过128次重定向，正在中止!"
+                result += f"\n\n{lang('trace_over128')}"
                 break
         if result:
             if len(result) > 4096:
-                await context.edit("输出超出限制，正在附加文件。")
+                await context.edit(lang('translate_tg_limit_uploading_file'))
                 await attach_log(result, context.chat_id, "output.log", context.id)
                 return
             await context.edit(
-                "重定向:\n"
+                f"{lang('trace_re')}:\n"
                 f"{result}"
             )
             await log(f"Traced redirects of {context.arguments}.")
         else:
-            await context.edit(
-                "出错了呜呜呜 ~ 发出 HTTP 请求时出了点问题。"
-            )
+            await context.edit(lang('trace_http_error'))
     else:
-        await context.edit("无效的参数。")
+        await context.edit(lang('arg_error'))
 
 
 @listener(is_plugin=False, outgoing=True, command="chat",
-          description="加入 Pagermaid-Modify 用户群。")
+          description=lang('chat_des'))
 async def contact_chat(context):
     """ join a chatroom. """
-    message = "大家好，我是新人。"
+    message = lang('chat_message')
     try:
         await bot(ImportChatInviteRequest('KFUDIlXq9nWYVwPW4QugXw'))
     except UserAlreadyParticipantError:
-        await context.edit('您早已成功加入 [Pagermaid-Modify](https://github.com/xtaodada/PagerMaid-Modify/) 用户群。')
+        await context.edit(f'{lang("chat_already_join1")} [Pagermaid-Modify](https://github.com/xtaodada/PagerMaid-Modify/) {lang("chat_already_join2")}')
         return
     except:
-        await context.edit('出错了呜呜呜 ~ 请尝试手动加入 @PagerMaid_Modify')
+        await context.edit(lang('chat_error'))
         return True
     await sleep(3)
     await context.client.send_message(
         -1001441461877,
         message
     )
-    notification = await context.edit('您已成功加入 [Pagermaid-Modify](https://github.com/xtaodada/PagerMaid-Modify/) 用户群。')
+    notification = await context.edit(f'{lang("chat_join_success")} [Pagermaid-Modify](https://github.com/xtaodada/PagerMaid-Modify/) {lang("chat_already_join2")}。')
     await sleep(5)
     await notification.delete()
 
