@@ -43,19 +43,32 @@ except FileNotFoundError:
 lang_dict: dict = {}
 
 try:
-    with open(f"languages/{config['application_language']}.yml", "r", encoding="utf-8") as f:
+    with open(f"languages/built-in/{config['application_language']}.yml", "r", encoding="utf-8") as f:
         lang_dict = safe_load(f)
 except Exception as e:
     print("Reading language YAML file failed")
     print(e)
     exit(1)
 
-
 def lang(text: str) -> str:
     """ i18n """
     result = lang_dict.get(text, text)
     return result
 
+def pluglang(plugin_name: str, key: str) -> str:
+    """ i18n plugins """
+    base_dir = "languages/plugins"
+    app_lang = config["application_language"]
+    lang_dir = f"{base_dir}/{plugin_name}/{app_lang}.yml"
+    if exists(lang_dir):
+        with open(lang_dir, "r", encoding="utf-8") as f:
+            try:
+                lang_data = safe_load(f)
+                return lang_data[key]
+            except Exception as e:
+                print(e)
+    print(f"Problem(s) occured while reading the language file of {plugin_name}")
+    return None
 
 if strtobool(config['debug']):
     logs.setLevel(DEBUG)

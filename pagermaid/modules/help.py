@@ -30,7 +30,7 @@ async def help(context):
 async def lang_change(context):
     to_lang = context.arguments
     from_lang = config["application_language"]
-    dir, ldir = listdir('languages'), []
+    dir, ldir = listdir('languages/built-in'), []
     for i in dir:
         if not i.find('yml') == -1:
             ldir.append(i[:-4])
