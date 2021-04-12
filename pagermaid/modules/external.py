@@ -7,12 +7,12 @@ from gtts import gTTS
 from re import compile as regex_compile
 from pagermaid import log
 from pagermaid.listener import listener, config
-from pagermaid.utils import clear_emojis, attach_log, fetch_youtube_audio
+from pagermaid.utils import clear_emojis, attach_log, fetch_youtube_audio, lang
 
 
 @listener(is_plugin=False, outgoing=True, command="translate",
-          description="通过 Google 翻译将目标消息翻译成指定的语言。（支持回复）",
-          parameters="<文本>")
+          description=lang('translate_des'),
+          parameters=lang('translate_parameters'))
 async def translate(context):
     """ PagerMaid universal translator. """
     translator = Translator()
@@ -24,37 +24,37 @@ async def translate(context):
     elif reply:
         message = reply.text
     else:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
 
     try:
-        await context.edit("正在生成翻译中 . . .")
+        await context.edit(lang('translate_processing'))
         try:
             result = translator.translate(clear_emojis(message), dest=lang)
         except:
             from translate import Translator as trans
             result = trans(to_lang=lang.replace('zh-cn', 'zh')).translate(clear_emojis(message))
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 找不到目标语言，请更正配置文件中的错误。")
+        await context.edit(lang('translate_ValueError'))
         return
 
     source_lang = LANGUAGES[f'{result.src.lower()}']
     trans_lang = LANGUAGES[f'{result.dest.lower()}']
-    result = f"**文本翻译** 源语言 {source_lang.title()}:\n{result.text}"
+    result = f"**{lang('translate_hits')}** {lang('translate_original_lang')} {source_lang.title()}:\n{result.text}"
 
     if len(result) > 4096:
-        await context.edit("输出超出 TG 限制，正在尝试上传文件。")
+        await context.edit(lang('translate_tg_limit_uploading_file'))
         await attach_log(result, context.chat_id, "translation.txt", context.id)
         return
     await context.edit(result)
     if len(result) <= 4096:
-        await log(f"把 `{message}` 从 {source_lang} 翻译到了 {trans_lang}")
+        await log(f"{translate('get')} `{message}` {lang('translate_from')} {source_lang} {lang('translate_to')} {trans_lang}")
     else:
-        await log(f"把一条消息从 {source_lang} 翻译到了 {trans_lang}.")
+        await log(f"{translate('get')}{translate('from')} {source_lang} {lang('translate_to')} {trans_lang}.")
 
 
 @listener(is_plugin=False, outgoing=True, command="tts",
-          description="通过 Google文本到语音 基于字符串生成语音消息。",
+          description=lang('tts_des'),
           parameters="<string>")
 async def tts(context):
     """ Send TTS stuff as voice message. """
@@ -66,20 +66,20 @@ async def tts(context):
     elif reply:
         message = reply.text
     else:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
 
     try:
-        await context.edit("生成语音中 . . .")
+        await context.edit(lang('tts_processing'))
         gTTS(message, lang=lang)
     except AssertionError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('tts_AssertionError'))
         return
     except ValueError:
-        await context.edit('出错了呜呜呜 ~ 找不到目标语言，请更正配置文件中的错误。')
+        await context.edit(lang('tts_ValueError'))
         return
     except RuntimeError:
-        await context.edit('出错了呜呜呜 ~ 加载语言数组时出错。')
+        await context.edit(lang('tts_RuntimeError'))
         return
     google_tts = gTTS(message, lang=lang)
     google_tts.save("vocals.mp3")
@@ -93,14 +93,14 @@ async def tts(context):
         await context.client.send_file(context.chat_id, "vocals.mp3", voice_note=True)
         remove("vocals.mp3")
         if len(message) <= 4096:
-            await log(f"生成了一条文本到语音的音频消息 ： `{message}`.")
+            await log(f"{lang('tts_success')}: `{message}`.")
         else:
-            await log("生成了一条文本到语音的音频消息。")
+            await log(lang('tts_success'))
         await context.delete()
 
 
 @listener(is_plugin=False, outgoing=True, command="google",
-          description="使用 Google 查询",
+          description=lang('google_des'),
           parameters="<query>")
 async def googletest(context):
     """ Searches Google for a string. """
@@ -112,11 +112,11 @@ async def googletest(context):
     elif reply:
         query = reply.text
     else:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
 
     query = query.replace(' ', '+')
-    await context.edit("正在拉取结果 . . .")
+    await context.edit(lang('google_processing'))
     results = ""
     for i in mg.search(query=query, num=int(config['result_length'])):
         try:
@@ -124,16 +124,16 @@ async def googletest(context):
             link = i['url']
             results += f"\n[{title}]({link}) \n"
         except:
-            await context.edit("连接到 google服务器 失败")
+            await context.edit(lang('google_connection_error'))
             return
     await context.edit(f"**Google** |`{query}`| 🎙 🔍 \n"
                        f"{results}",
                        link_preview=False)
-    await log(f"在Google搜索引擎上查询了 `{query}`")
+    await log(f"{lang('google_success')} `{query}`")
 
 
 @listener(is_plugin=False, outgoing=True, command="fetchaudio",
-          description="从多个平台获取音频文件。",
+          description=lang('fetchaudio_des'),
           parameters="<url>,<string>")
 async def fetchaudio(context):
     if context.arguments:
@@ -143,20 +143,20 @@ async def fetchaudio(context):
             url = context.arguments
             string_2 = "#audio "
     else:
-        await context.edit("出错了呜呜呜 ~ 错误的语法。")
+        await context.edit(lang('fetchaudio_error_grammer'))
         return
     """ Fetches audio from provided URL. """
     reply = await context.get_reply_message()
     reply_id = None
-    await context.edit("拉取音频中 . . .")
+    await context.edit(lang('fetchaudio_processing'))
     if reply:
         reply_id = reply.id
     if url is None:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     youtube_pattern = regex_compile(r"^(http(s)?://)?((w){3}.)?youtu(be|.be)?(\.com)?/.+")
     if youtube_pattern.match(url):
         if not await fetch_youtube_audio(url, context.chat_id, reply_id, string_2):
-            await context.edit("出错了呜呜呜 ~ 原声带下载失败。")
-        await log(f"从链接中获取了一条音频，链接： {url}.")
+            await context.edit(lang('fetchaudio_error_downloading'))
+        await log(f"{lang('fetchaudio_success')}, {lang('fetchaudio_link')}: {url}.")
         await context.delete()

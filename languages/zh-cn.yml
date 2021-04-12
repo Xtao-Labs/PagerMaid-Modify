@@ -21,6 +21,13 @@ python: 请将您的 python 升级到至少3.6版。
 config_error: 出错了呜呜呜 ~ 请在工作目录中放置一个有效的配置文件。
 save_id: 设置用户标识成功。
 
+<<<<<<< Updated upstream
+=======
+# modules_init
+modules_init_loading_modules: 加载内置模块
+modules_init_loading_plugins: 加载插件
+
+>>>>>>> Stashed changes
 # listener
 command: 命令
 has_reg: 已经被注册。
@@ -98,7 +105,10 @@ deny_set: 已被添加到自动拒绝对话列表中。
 deny_cancel: 已从自动拒绝对话列表中移除。
 deny_e_noexist: emm...当前对话不在自动拒绝对话列表中。
 deny_e_exist: emm...当前对话在自动拒绝对话列表中。
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 # help
 help_des: 显示命令列表或单个命令的帮助。
 help_list: 命令列表
@@ -106,7 +116,11 @@ help_send: 发送
 help_see: 以查看特定命令的帮助
 help_source: 源代码
 
+<<<<<<< Updated upstream
 #qr
+=======
+# qr
+>>>>>>> Stashed changes
 ## genqr
 genqr_des: 生成 QR Code 。
 genqr_process: 生成QR码中。。。
@@ -117,4 +131,162 @@ parseqr_des: 回复一张 QR 码进行解析并发送 QR 码内容。
 parseqr_nofile: 回复的消息中没有附件。
 parseqr_content: 内容
 parseqr_e_noqr: 回复的附件不是 QR 码。
+<<<<<<< Updated upstream
 parseqr_log: 已解析一张带有 QR 码的消息，内容：
+=======
+parseqr_log: 已解析一张带有 QR 码的消息，内容：
+
+# captions
+## convert
+convert_des: 回复某条附件消息然后转换为图片输出
+convert_process: 正在转换中 . . .
+convert_no_file: 出错了呜呜呜 ~ 回复的消息中好像没有附件。
+convert_error: 出错了呜呜呜 ~ 转换期间发生了错误。
+## caption
+caption_des: 将两行字幕添加到回复的图片中，字幕将分别添加到顶部和底部，字幕需要以逗号分隔。
+caption_process: 正在渲染图像中 . . .
+caption_error_grammer: 出错了呜呜呜 ~ 错误的语法。
+caption_no_file: 出错了呜呜呜 ~ 目标消息中没有附件
+caption_error: 出错了呜呜呜 ~ 转换期间发生了错误。
+caption_success1: 成功将字幕
+caption_success2: 添加到了一张图片.
+## ocr
+ocr_des: 从回复的图片中提取文本
+ocr_psm_len_error: 呜呜呜出错了...psm 取值为 0-13
+ocr_processing: 正在处理图片，请稍候 . . .
+ocr_no_file: 出错了呜呜呜 ~ 回复的消息中没有附件。
+ocr_no_result: 出错了呜呜呜 ~ 请向原作者报告此问题。
+ocr_result_hint: 以下是提取到的文字
+## highlight
+highlight_des: 生成有语法高亮显示的图片。
+highlight_processing: 正在渲染图片，请稍候 . . .
+highlight_no_file: 出错了呜呜呜 ~ 无法检索目标消息。
+highlight_uploading: 正在上传图片中 . . .
+## handle_failure
+handle_failure_error: 出错了呜呜呜 ~ 请报告此问题。
+
+# clock
+## time
+time_des: 显示特定区域的时间，如果参数为空，则默认显示配置值。
+time_parameters: <地区>
+time_time: 时间
+
+# external
+## translate
+translate_des: 通过 Google 翻译将目标消息翻译成指定的语言。（支持回复）
+translate_parameters: <文本>
+translate_processing: 正在生成翻译中 . . .
+translate_ValueError: 出错了呜呜呜 ~ 找不到目标语言，请更正配置文件中的错误。
+translate_hits: 文本翻译
+translate_original_lang: 源语言
+translate_tg_limit_uploading_file: 输出超出 TG 限制，正在尝试上传文件。
+translate_get: 把一条消息
+translate_from: 从
+translate_to: 翻译到了
+# tts
+tts_des: 通过 Google文本到语音 基于字符串生成语音消息。
+tts_processing: 生成语音中 . . .
+tts_AssertionError: 出错了呜呜呜 ~ 无效的参数。
+tts_ValueError: 出错了呜呜呜 ~ 找不到目标语言，请更正配置文件中的错误。
+tts_RuntimeError: 出错了呜呜呜 ~ 加载语言数组时出错。
+tts_success: 生成了一条文本到语音的音频消息
+# google
+google_des: 使用 Google 查询
+google_processing: 正在拉取结果 . . .
+google_connection_error: 连接到 google服务器 失败
+google_success: 在Google搜索引擎上查询了
+# fetchaudio
+fetchaudio_des: 从多个平台获取音频文件。
+fetchaudio_error_grammer: 出错了呜呜呜 ~ 错误的语法。
+fetchaudio_processing: 拉取音频中 . . .
+fetchaudio_error_downloading: 出错了呜呜呜 ~ 原声带下载失败。
+fetchaudio_success: 从链接中获取了一条音频
+fetchaudio_link: 链接
+
+# fun
+## animate
+animate_des: 使用消息制作文本动画。
+## teletype
+teletype_des: 通过编辑消息来制作打字动画。会产生大量操作记录！
+## mock
+mock_des: 通过怪异的大写字母来嘲笑人们。
+## widen
+widen_des: 加宽字符串中的每个字符。
+widen_already: 此消息已被加宽。
+## fox
+fox_des: 使用狐狸来让您的消息看起来不那么完整
+## owo
+owo_des: 将消息转换为OwO。
+## flip
+flip_des: 翻转消息。
+## ship
+ship_des: 生成随机基友，也支持指定目标。
+ship_processing: 生成基友中 . . .
+ship_BaseException: 出错了呜呜呜 ~ 获取用户时出错。
+ship_hint: 恭喜两位
+## rng
+rng_des: 生成具有特定长度的随机字符串。
+## aaa
+aaa_des: 发送一条包含 a 和 A 的消息
+## asciiart
+asciiart_des: 为指定的字符串生成ASCII文字。
+## tuxsay
+tuxsay_des: 生成一条看起来像企鹅说话的 ASCII 艺术消息
+## coin
+coin_des: 扔硬币。
+coin_processing: 扔硬币中 . . .
+coin_lost: 我丢了硬币
+
+# help
+## lang
+lang_des: 切换语言。
+lang_change_to: 语言已切换到
+lang_reboot: 正在重新启动。
+lang_current_lang: 当前语言是
+lang_all_lang: 所有可用的语言有：
+
+# message
+## id
+id_des: 获取一条消息的各种信息。
+id_hint: 以下是被回复消息的信息
+id_is_bot_yes: 是
+id_da: 死号
+## uslog
+uslog_des: 转发一条消息到日志。
+uslog_success: 已记录。
+uslog_log_disable: 出错了呜呜呜 ~ 日志记录已禁用。
+## log
+log_des: 静默转发一条消息到日志。
+## re
+re_des: 在当前会话复读回复的消息。（需要回复一条消息）
+re_parameters: <次数>
+re_too_big: 呜呜呜出错了...这个数字太大惹
+re_arg_error: 呜呜呜出错了...可能参数包含了数字以外的符号
+re_not_reply: 出错了呜呜呜 ~ 您好像没有回复一条消息。
+## leave
+leave_res: 说 “再见” 然后离开会话。
+leave_bye: 贵群真是浪费我的时间，再见。
+leave_not_group: 出错了呜呜呜 ~ 当前聊天似乎不是群聊。
+## meter2feet
+m2f_des: 将米转换为英尺。
+m2f_get: 将
+m2f_meter: 米
+m2f_convert_to: 转换为了
+m2f_feet: 英尺
+## feet2meter
+f2m_des: 将英尺转换为米。
+## hitokoto
+hitokoto_des: 每日一言
+hitokoto_type_anime: 动画
+hitokoto_type_manga: 漫画
+hitokoto_type_game: 游戏
+hitokoto_type_article: 文学
+hitokoto_type_original: 原创
+hitokoto_type_web: 来自网络
+hitokoto_type_other: 其他
+hitokoto_type_movie: 影视
+hitokoto_type_poem: 诗词
+hitokoto_type_netease_music: 网易云
+hitokoto_type_philosophy: 哲学
+hitokoto_type_meme: 抖机灵
+>>>>>>> Stashed changes

@@ -6,18 +6,18 @@ from telethon.errors.rpcerrorlist import MessageNotModifiedError
 from cowpy import cow
 from pagermaid import module_dir
 from pagermaid.listener import listener
-from pagermaid.utils import owoify, execute, random_gen, obtain_message
+from pagermaid.utils import owoify, execute, random_gen, obtain_message, lang
 
 
 @listener(is_plugin=False, outgoing=True, command="animate",
-          description="使用消息制作文本动画。",
+          description=lang('animate_des'),
           parameters="<message>")
 async def animate(context):
     """ Make a text animation using a message. """
     try:
         message = await obtain_message(context)
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     interval = 0.3
     words = message.split(" ")
@@ -31,14 +31,14 @@ async def animate(context):
 
 
 @listener(is_plugin=False, outgoing=True, command="teletype",
-          description="通过编辑消息来制作打字动画。会产生大量操作记录！",
+          description=lang('teletype_des'),
           parameters="<message>")
 async def teletype(context):
     """ Makes a typing animation via edits to the message. """
     try:
         message = await obtain_message(context)
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     interval = 0.03
     cursor = "█"
@@ -58,14 +58,14 @@ async def teletype(context):
 
 
 @listener(is_plugin=False, outgoing=True, command="mock",
-          description="通过怪异的大写字母来嘲笑人们。",
+          description=lang('mock_des'),
           parameters="<message>")
 async def mock(context):
     """ Mock people with weird capitalization. """
     try:
         message = await obtain_message(context)
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     result = mocker(message)
     reply = await context.get_reply_message()
@@ -81,14 +81,14 @@ async def mock(context):
 
 
 @listener(is_plugin=False, outgoing=True, command="widen",
-          description="加宽字符串中的每个字符。",
+          description=lang('widen_des'),
           parameters="<message>")
 async def widen(context):
     """ Widens every character in a string. """
     try:
         message = await obtain_message(context)
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     wide_map = dict((i, i + 0xFEE0) for i in range(0x21, 0x7F))
     wide_map[0x20] = 0x3000
@@ -100,59 +100,59 @@ async def widen(context):
             try:
                 await reply.edit(result)
             except MessageNotModifiedError:
-                await context.edit("此消息已被加宽。")
+                await context.edit(lang('widen_already'))
                 return
             await context.delete()
 
 
 @listener(is_plugin=False, outgoing=True, command="fox",
-          description="使用狐狸来让您的消息看起来不那么完整",
+          description=lang('fox_des'),
           parameters="<message>")
 async def fox(context):
     """ Makes a fox scratch your message. """
     try:
         message = await obtain_message(context)
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     result = corrupt(" ".join(message).lower())
     await edit_reply(result, context)
 
 
 @listener(is_plugin=False, outgoing=True, command="owo",
-          description="将消息转换为OwO。",
+          description=lang('owo_des'),
           parameters="<message>")
 async def owo(context):
     """ Makes messages become OwO. """
     try:
         message = await obtain_message(context)
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     result = owoify(message)
     await edit_reply(result, context)
 
 
 @listener(is_plugin=False, outgoing=True, command="flip",
-          description="翻转消息。",
+          description=lang('flip_des'),
           parameters="<message>")
 async def flip(context):
     """ Flip flops the message. """
     try:
         message = await obtain_message(context)
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     result = message[::-1]
     await edit_reply(result, context)
 
 
 @listener(is_plugin=False, outgoing=True, command="ship",
-          description="生成随机基友，也支持指定目标。",
+          description=lang('ship_des'),
           parameters="<username> <username>")
 async def ship(context):
     """ Ship randomly generated members. """
-    await context.edit("生成基友中 . . .")
+    await context.edit(lang('ship_processing'))
     if len(context.parameter) == 0:
         users = []
         async for user in context.client.iter_participants(context.chat_id):
@@ -168,7 +168,7 @@ async def ship(context):
         try:
             target_1 = await context.client.get_entity(user_expression)
         except BaseException:
-            await context.edit("出错了呜呜呜 ~ 获取用户时出错。")
+            await context.edit(lang('ship_BaseException'))
             return
         async for user in context.client.iter_participants(context.chat_id):
             users.append(user)
@@ -180,18 +180,18 @@ async def ship(context):
             target_1 = await context.client.get_entity(user_expression_1)
             target_2 = await context.client.get_entity(user_expression_2)
         except BaseException:
-            await context.edit("出错了呜呜呜 ~ 获取用户时出错。")
+            await context.edit(lang('ship_BaseException'))
             return
     else:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
-    await context.edit(f"**恭喜两位（（（**\n"
+    await context.edit(f"**{lang('ship_hint')}（（（**\n"
                        f"[{target_1.first_name}](tg://user?id={target_1.id}) + "
                        f"[{target_2.first_name}](tg://user?id={target_2.id}) = ❤️")
 
 
 @listener(is_plugin=False, outgoing=True, command="rng",
-          description="生成具有特定长度的随机字符串。",
+          description=lang('rng_des'),
           parameters="<length>")
 async def rng(context):
     """ Generates a random string with a specific length. """
@@ -202,13 +202,13 @@ async def rng(context):
         try:
             await context.edit(await random_gen("A-Za-z0-9", int(context.parameter[0])))
         except ValueError:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
         return
-    await context.edit("出错了呜呜呜 ~ 无效的参数。")
+    await context.edit(lang('arg_error'))
 
 
 @listener(is_plugin=False, outgoing=True, command="aaa",
-          description="发送一条包含 a 和 A 的消息",
+          description=lang('aaa_des'),
           parameters="<integer>")
 async def aaa(context):
     """ Saves a few presses of the A and shift key. """
@@ -219,44 +219,44 @@ async def aaa(context):
         try:
             await context.edit(await random_gen("Aa", int(context.parameter[0])))
         except ValueError:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
         return
-    await context.edit("出错了呜呜呜 ~ 无效的参数。")
+    await context.edit(lang('arg_error'))
 
 
 @listener(is_plugin=False, outgoing=True, command="asciiart",
-          description="为指定的字符串生成ASCII文字。",
+          description=lang('asciiart_des'),
           parameters="<string>")
 async def asciiart(context):
     """ Generates ASCII art of specified string. """
     try:
         message = await obtain_message(context)
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     result = await execute(f"figlet -f {module_dir}/assets/graffiti.flf '{message}'")
     await context.edit(f"```\n{result}\n```")
 
 
 @listener(is_plugin=False, outgoing=True, command="tuxsay",
-          description="生成一条看起来像企鹅说话的 ASCII 艺术消息",
+          description=lang('tuxsay_des'),
           parameters="<message>")
 async def tuxsay(context):
     """ Generates ASCII art of Tux saying a specific message. """
     try:
         message = await obtain_message(context)
     except ValueError:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     result = cow.Tux().milk(message)
     await context.edit(f"```\n{result}\n```")
 
 
 @listener(is_plugin=False, outgoing=True, command="coin",
-          description="扔硬币。")
+          description=lang('coin_des'))
 async def coin(context):
     """ Throws a coin. """
-    await context.edit("扔硬币中 . . .")
+    await context.edit(lang('coin_processing'))
     await sleep(.5)
     outcomes = ['A'] * 5 + ['B'] * 5 + ['C'] * 1
     result = choice(outcomes)
@@ -270,7 +270,7 @@ async def coin(context):
         await sleep(.3)
         count += 1
     if result == "C":
-        await context.edit("我丢了硬币")
+        await context.edit(lang('coin_lost'))
     elif result == "B":
         await context.edit("Tails!")
     elif result == "A":

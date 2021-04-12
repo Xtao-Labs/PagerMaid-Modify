@@ -9,10 +9,11 @@ from telethon.errors.rpcerrorlist import ChatIdInvalidError
 from distutils2.util import strtobool
 from pagermaid import bot, log, config
 from pagermaid.listener import listener
+from pagermaid.utils import lang
 
 
 @listener(is_plugin=False, outgoing=True, command="id",
-          description="获取一条消息的各种信息。")
+          description=lang('id_des'))
 async def userid(context):
     """ Query the UserID of the sender of the message you replied to. """
     message = await context.get_reply_message()
@@ -36,13 +37,13 @@ async def userid(context):
             text += "username: @" + msg_from.username + "\n"
         text += "date: `" + str(msg_from.date) + "`\n"
     if message:
-        text += "\n以下是被回复消息的信息\nMessage ID: `" + str(message.id) + "`\n\n**User**\nid: `" + str(message.sender.id) + "`"
+        text += "\n" + lang('id_hint') + "\nMessage ID: `" + str(message.id) + "`\n\n**User**\nid: `" + str(message.sender.id) + "`"
         if message.sender.bot:
-            text += "\nis_bot: 是"
+            text += f"\nis_bot: {lang('id_is_bot_yes')}"
         try:
             text += "\nfirst_name: `" + message.sender.first_name + "`"
         except TypeError:
-            text += "\n**死号**"
+            text += f"\n**{lang('id_da')}**"
         if message.sender.last_name:
             text += "\nlast_name: `" + message.sender.last_name + "`"
         if message.sender.username:
@@ -64,11 +65,11 @@ async def userid(context):
                     text += "\n\n**Forward From User**\nid: `" + str(
                         message.forward.sender_id) + "`"
                     if message.forward.sender.bot:
-                        text += "\nis_bot: 是"
+                        text += f"\nis_bot: {lang('id_is_bot_yes')}"
                     try:
                         text += "\nfirst_name: `" + message.forward.sender.first_name + "`"
                     except TypeError:
-                        text += "\n**死号**"
+                        text += f"\n**{lang('id_da')}**"
                     if message.forward.sender.last_name:
                         text += "\nlast_name: `" + message.forward.sender.last_name + "`"
                     if message.forward.sender.username:
@@ -80,7 +81,7 @@ async def userid(context):
 
 
 @listener(is_plugin=False, outgoing=True, command="uslog",
-          description="转发一条消息到日志。",
+          description=lang('uslog_des'),
           parameters="<string>")
 async def uslog(context):
     """ Forwards a message into log group """
@@ -91,17 +92,17 @@ async def uslog(context):
         elif context.arguments:
             await log(context.arguments)
         else:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
             return
-        await context.edit("已记录。")
+        await context.edit(lang('uslog_success'))
     else:
-        await context.edit("出错了呜呜呜 ~ 日志记录已禁用。")
+        await context.edit(lang('uslog_log_disable'))
 
 
 @listener(is_plugin=False, outgoing=True, command="log",
-          description="静默转发一条消息到日志。",
+          description=lang('log_des'),
           parameters="<string>")
-async def log(context):
+async def logging(context):
     """ Forwards a message into log group """
     if strtobool(config['log']):
         if context.reply_to_msg_id:
@@ -110,16 +111,16 @@ async def log(context):
         elif context.arguments:
             await log(context.arguments)
         else:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
             return
         await context.delete()
     else:
-        await context.edit("出错了呜呜呜 ~ 日志记录已禁用。")
+        await context.edit(lang('uslog_log_disable'))
 
 
 @listener(is_plugin=False, outgoing=True, command="re",
-          description="在当前会话复读回复的消息。（需要回复一条消息）",
-          parameters="<次数>")
+          description=lang('re_des'),
+          parameters=lang('re_parameters'))
 async def re(context):
     """ Forwards a message into this group """
     reply = await context.get_reply_message()
@@ -130,24 +131,24 @@ async def re(context):
             try:
                 num = int(context.arguments)
                 if num > 100:
-                    await context.edit('呜呜呜出错了...这个数字太大惹')
+                    await context.edit(lang('re_too_big'))
                     return True
             except:
-                await context.edit('呜呜呜出错了...可能参数包含了数字以外的符号')
+                await context.edit(lang('re_arg_error'))
                 return True
         await context.delete()
         for nums in range(0, num):
             await reply.forward_to(int(context.chat_id))
     else:
-        await context.edit("出错了呜呜呜 ~ 您好像没有回复一条消息。")
+        await context.edit(lang('re_not_reply'))
 
 
 @listener(is_plugin=False, outgoing=True, command="leave",
-          description="说 “再见” 然后离开会话。")
+          description=lang('leave_res'))
 async def leave(context):
     """ It leaves you from the group. """
     if context.is_group:
-        await context.edit("贵群真是浪费我的时间，再见。")
+        await context.edit(lang('leave_bye'))
         try:
             await bot(DeleteChatUserRequest(chat_id=context.chat_id,
                                             user_id=context.sender_id
@@ -155,37 +156,37 @@ async def leave(context):
         except ChatIdInvalidError:
             await bot(LeaveChannelRequest(context.chat_id))
     else:
-        await context.edit("出错了呜呜呜 ~ 当前聊天似乎不是群聊。")
+        await context.edit(lang('leave_not_group'))
 
 
 @listener(is_plugin=False, outgoing=True, command="meter2feet",
-          description="将米转换为英尺。",
+          description=lang('m2f_des'),
           parameters="<meters>")
 async def meter2feet(context):
     """ Convert meter to feet. """
     if not len(context.parameter) == 1:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     meter = float(context.parameter[0])
     feet = meter / .3048
-    await context.edit(f"将 {str(meter)} 米装换为了 {str(feet)} 英尺。")
+    await context.edit(f"{lang('m2f_get')} {str(meter)}{lang('m2f_meter')} {lang('m2f_covert_to')}  {str(feet)}{lang('m2f_feet')}")
 
 
 @listener(is_plugin=False, outgoing=True, command="feet2meter",
-          description="将英尺转换为米。",
+          description=lang('f2m_des'),
           parameters="<feet>")
 async def feet2meter(context):
     """ Convert feet to meter. """
     if not len(context.parameter) == 1:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     feet = float(context.parameter[0])
     meter = feet * .3048
-    await context.edit(f"将 {str(feet)} 英尺转换为了 {str(meter)} 米。")
+    await context.edit(f"{lang('m2f_get')} {str(feet)} {lang('m2f_feet')}{lang('m2f_covert_to')} {str(meter)}{lang('m2f_meter')}")
 
 
 @listener(is_plugin=False, outgoing=True, command="hitokoto",
-          description="每日一言")
+          description=lang('hitokoto_des'))
 async def hitokoto(context):
     """ Get hitokoto.cn """
     hitokoto_while = 1
@@ -201,27 +202,27 @@ async def hitokoto(context):
                 continue
     hitokoto_type = ''
     if hitokoto_json['type'] == 'a':
-        hitokoto_type = '动画'
+        hitokoto_type = lang('hitokoto_type_anime')
     elif hitokoto_json['type'] == 'b':
-        hitokoto_type = '漫画'
+        hitokoto_type = lang('hitokoto_type_manga')
     elif hitokoto_json['type'] == 'c':
-        hitokoto_type = '游戏'
+        hitokoto_type = lang('hitokoto_type_game')
     elif hitokoto_json['type'] == 'd':
-        hitokoto_type = '文学'
+        hitokoto_type = lang('hitokoto_type_article')
     elif hitokoto_json['type'] == 'e':
-        hitokoto_type = '原创'
+        hitokoto_type = lang('hitokoto_type_original')
     elif hitokoto_json['type'] == 'f':
-        hitokoto_type = '来自网络'
+        hitokoto_type = lang('hitokoto_type_web')
     elif hitokoto_json['type'] == 'g':
-        hitokoto_type = '其他'
+        hitokoto_type = lang('hitokoto_type_other')
     elif hitokoto_json['type'] == 'h':
-        hitokoto_type = '影视'
+        hitokoto_type = lang('hitokoto_type_movie')
     elif hitokoto_json['type'] == 'i':
-        hitokoto_type = '诗词'
+        hitokoto_type = lang('hitokoto_type_poem')
     elif hitokoto_json['type'] == 'j':
-        hitokoto_type = '网易云'
+        hitokoto_type = lang('hitokoto_type_netease_music')
     elif hitokoto_json['type'] == 'k':
-        hitokoto_type = '哲学'
+        hitokoto_type = lang('hitokoto_type_philosophy')
     elif hitokoto_json['type'] == 'l':
-        hitokoto_type = '抖机灵'
+        hitokoto_type = lang('hitokoto_type_meme')
     await context.edit(f"{hitokoto_json['hitokoto']} - {hitokoto_json['from']}（{str(hitokoto_type)}）")

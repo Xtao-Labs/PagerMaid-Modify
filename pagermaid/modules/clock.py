@@ -4,15 +4,16 @@ from datetime import datetime
 from pytz import country_names, country_timezones, timezone
 from pagermaid import config
 from pagermaid.listener import listener
+from pagermaid.utils import lang
 
 
 @listener(is_plugin=False, outgoing=True, command="time",
-          description="显示特定区域的时间，如果参数为空，则默认显示配置值。",
-          parameters="<地区>")
+          description=lang('time_des'),
+          parameters=lang('time_parameters'))
 async def time(context):
     """ For querying time. """
     if len(context.parameter) > 1:
-        context.edit("出错了呜呜呜 ~ 无效的参数。")
+        context.edit()
     if len(context.parameter) == 1:
         country = context.parameter[0].title()
     else:
@@ -30,7 +31,7 @@ async def time(context):
 
     time_zone = await get_timezone(country)
     if not time_zone:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
 
     try:
@@ -38,7 +39,7 @@ async def time(context):
     except KeyError:
         country_name = country
 
-    await context.edit(f"**{country_name} 时间：**\n"
+    await context.edit(f"**{country_name} {lang('time_time')}：**\n"
                        f"`{datetime.now(time_zone).strftime(date_form)} "
                        f"{datetime.now(time_zone).strftime(time_form)}`")
 

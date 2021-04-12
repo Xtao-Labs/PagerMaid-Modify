@@ -9,7 +9,7 @@ from shutil import copyfile, move
 from glob import glob
 from pagermaid import log, working_dir
 from pagermaid.listener import listener
-from pagermaid.utils import upload_attachment
+from pagermaid.utils import upload_attachment, lang
 from pagermaid.modules import plugin_list as active_plugins, __list_plugins
 
 
@@ -37,34 +37,34 @@ def update_version(file_path, plugin_content, plugin_name, version):
 
 
 @listener(is_plugin=False, outgoing=True, command="apt", diagnostics=False,
-          description="用于管理安装到 PagerMaid-Modify 的插件。",
-          parameters="{update|search|show|status|install|remove|enable|disable|upload} <插件名称/文件>")
+          description=lang('apt_des'),
+          parameters="")
 async def plugin(context):
     if len(context.parameter) == 0:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
         return
     reply = await context.get_reply_message()
     plugin_directory = f"{working_dir}/plugins/"
     if context.parameter[0] == "install":
         if len(context.parameter) == 1:
-            await context.edit("安装插件中 . . .")
+            await context.edit(lang('apt_processing'))
             if reply:
                 file_path = await context.client.download_media(reply)
             else:
                 file_path = await context.download_media()
             if file_path is None or not file_path.endswith('.py'):
-                await context.edit("出错了呜呜呜 ~ 无法从附件获取插件文件。")
+                await context.edit(lang('apt_no_py'))
                 try:
                     remove(str(file_path))
                 except FileNotFoundError:
                     pass
                 return
             move_plugin(file_path)
-            await context.edit(f"插件 {path.basename(file_path)[:-3]} 已安装，PagerMaid-Modify 正在重新启动。")
-            await log(f"成功安装插件 {path.basename(file_path)[:-3]}.")
+            await context.edit(f"{lang('apt_plugin')} {path.basename(file_path)[:-3]} {lang('apt_installed')}，{lang'apt_reboot'}")
+            await log(f"{lang('apt_success')} {path.basename(file_path)[:-3]}.")
             await context.client.disconnect()
         elif len(context.parameter) >= 2:
-            await context.edit("安装插件中 . . .")
+            await context.edit(lang('apt_processing'))
             success_list = []
             failed_list = []
             noneed_list = []
@@ -109,24 +109,24 @@ async def plugin(context):
                             move_plugin(file_path)
                             success_list.append(path.basename(file_path)[:-3])
                 if not flag:
-                    now_message += f"错误：没有找到插件 {plugin_name} 。\n"
+                    now_message += f"{apt_not_found} {plugin_name} 。\n"
                     failed_list.append(plugin_name)
             message = ""
             if len(success_list) > 0:
-                message += "安装成功 : %s\n" % ", ".join(success_list)
+                message += lang('apt_success') + " : %s\n" % ", ".join(success_list)
             if len(failed_list) > 0:
-                message += "安装失败 : %s\n" % ", ".join(failed_list)
+                message += lang('apt_failed') + " %s\n" % ", ".join(failed_list)
             if len(noneed_list) > 0:
-                message += "无需更新 : %s\n" % ", ".join(noneed_list)
+                message += lang('apt_no_update') + " %s\n" % ", ".join(noneed_list)
             await log(message)
             restart = len(success_list) > 0
             if restart:
-                message += "PagerMaid-Modify 正在重启。"
+                message += lang('apt_reboot')
             await context.edit(message)
             if restart:
                 await context.client.disconnect()
         else:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
     elif context.parameter[0] == "remove":
         if len(context.parameter) == 2:
             if exists(f"{plugin_directory}{context.parameter[1]}.py"):
@@ -149,11 +149,11 @@ async def plugin(context):
                 await context.edit(f"已删除的插件 {context.parameter[1]}.")
                 await log(f"已删除的插件 {context.parameter[1]}.")
             elif "/" in context.parameter[1]:
-                await context.edit("出错了呜呜呜 ~ 无效的参数。")
+                await context.edit(lang('arg_error'))
             else:
                 await context.edit("出错了呜呜呜 ~ 指定的插件不存在。")
         else:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
     elif context.parameter[0] == "status":
         if len(context.parameter) == 1:
             inactive_plugins = sorted(__list_plugins())
@@ -189,7 +189,7 @@ async def plugin(context):
                      f"加载失败: {inactive_plugins_string}"
             await context.edit(output)
         else:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
     elif context.parameter[0] == "enable":
         if len(context.parameter) == 2:
             if exists(f"{plugin_directory}{context.parameter[1]}.py.disabled"):
@@ -201,7 +201,7 @@ async def plugin(context):
             else:
                 await context.edit("出错了呜呜呜 ~ 指定的插件不存在。")
         else:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
     elif context.parameter[0] == "disable":
         if len(context.parameter) == 2:
             if exists(f"{plugin_directory}{context.parameter[1]}.py") is True:
@@ -213,7 +213,7 @@ async def plugin(context):
             else:
                 await context.edit("出错了呜呜呜 ~ 指定的插件不存在。")
         else:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
     elif context.parameter[0] == "upload":
         if len(context.parameter) == 2:
             file_name = f"{context.parameter[1]}.py"
@@ -234,7 +234,7 @@ async def plugin(context):
             else:
                 await context.edit("出错了呜呜呜 ~ 指定的插件不存在。")
         else:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
     elif context.parameter[0] == "update":
         unneed_update = "无需更新："
         need_update = "\n已更新："
@@ -303,7 +303,7 @@ async def plugin(context):
             else:
                 await context.edit('以下是插件仓库的搜索结果：\n\n' + '\n\n'.join(search_result))
         else:
-            await context.edit("出错了呜呜呜 ~ 无效的参数。")
+            await context.edit(lang('arg_error'))
     elif context.parameter[0] == "show":
         if len(context.parameter) == 1:
             await context.edit("没插件名我怎么显示？")
@@ -329,4 +329,4 @@ async def plugin(context):
             else:
                 await context.edit(search_result)
     else:
-        await context.edit("出错了呜呜呜 ~ 无效的参数。")
+        await context.edit(lang('arg_error'))
