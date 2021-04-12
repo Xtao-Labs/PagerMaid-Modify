@@ -26,11 +26,7 @@ async def help(context):
 
 
 @listener(is_plugin=False, outgoing=True, command="lang",
-<<<<<<< Updated upstream
-          description="切换语言。")
-=======
           description=lang('lang_des'))
->>>>>>> Stashed changes
 async def lang_change(context):
     to_lang = context.arguments
     from_lang = config["application_language"]
@@ -44,14 +40,7 @@ async def lang_change(context):
         file = file.replace(f'application_language: "{from_lang}"', f'application_language: "{to_lang}"')
         with open('config.yml', 'w') as f:
             f.write(file)
-<<<<<<< Updated upstream
-        await context.edit(f'语言已切换到 {to_lang} ，正在重新启动。')
-        await context.client.disconnect()
-    else:
-        await context.edit(f'当前语言是 {config["application_language"]}\n\n所有可用的语言有：{"，".join(ldir)}')
-=======
         await context.edit(f"{lang('lang_change_to')} {to_lang}, {lang('lang_reboot')}")
         await context.client.disconnect()
     else:
         await context.edit(f'{lang("lang_current_lang")} {config["application_language"]}\n\n{lang("lang_all_lang")}{"，".join(ldir)}')
->>>>>>> Stashed changes
