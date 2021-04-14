@@ -23,7 +23,6 @@ RUN pacman -Syu --needed --noconfirm \
     neofetch \
     sudo \
     gcc \
-    gcc8 \
     imagemagick \
     libwebp \
     zbar \
