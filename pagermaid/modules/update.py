@@ -24,7 +24,7 @@ async def update(context):
     parameter = None
     if len(context.parameter) == 1:
         parameter = context.parameter[0]
-    repo_url = 'https://github.com/xtaodada/PagerMaid-Modify.git'
+    repo_url = 'https://github.com/Xtao-Labs/PagerMaid-Modify.git'
 
     if parameter:
         if parameter == "debug":
