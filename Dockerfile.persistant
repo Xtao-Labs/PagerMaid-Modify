@@ -38,7 +38,6 @@ RUN source ~/.bashrc \
         libopenblas-dev \
         liblapack-dev \
         libpqxx-dev \
-    && rm -rf /root/.cache \
     && apt clean -y \
     && apt autoclean -y
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -55,4 +54,5 @@ RUN mkdir /pagermaid
 RUN git clone -b master https://github.com/Xtao-Labs/PagerMaid-Modify.git /pagermaid
 WORKDIR /pagermaid
 RUN pip -m pip install -r requirements.txt
+RUN sudo rm -rf /root/.cache
 CMD ["sh","utils/docker-run.sh"]
