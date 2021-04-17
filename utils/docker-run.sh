@@ -9,7 +9,7 @@ welcome() {
 }
 
 configure() {
-  cd /pagermaid
+  cd /pagermaid/workdir
   config_file=config.yml
   echo "生成配置文件中 . . ."
   cp config.gen.yml config.yml
@@ -74,19 +74,19 @@ login() {
   echo "请在账户授权完毕后，按 Ctrl + C 使 Docker 在后台模式下运行。"
   echo ""
   sleep 2
-  echo "Hello world!" > /pagermaid/install.lock
+  echo "Hello world!" > /pagermaid/workdir/install.lock
   python -m pagermaid
   exit
 }
 
 
 start_installation() {
-  if [ ! -f "/pagermaid/install.lock" ]; then
+  if [ ! -f "/pagermaid/workdir/install.lock" ]; then
     welcome
     configure
     login
   else
-    if [ ! -f "pagermaid.session" ]; then
+    if [ ! -f "/pagermaid/workdir/pagermaid.session" ]; then
       login
     else
       redis-server --daemonize yes
