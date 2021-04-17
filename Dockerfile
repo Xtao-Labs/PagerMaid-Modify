@@ -37,16 +37,16 @@ RUN apt update \
         libffi-dev \
         libopenblas-dev \
         liblapack-dev \
-        libpqxx-dev
+        libpqxx-dev \
+    && rm -rf /root/.cache \
+    && apt clean -y \
+    && apt autoclean -y
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone
 RUN ln -sf /usr/bin/python3 /usr/bin/python \
     && python -m pip install --upgrade pip \
     && pip install wheel \
     && pip install eyed3 pycryptodome
-RUN rm -rf /root/.cache \
-    && apt clean -y \
-    && apt autoclean -y
 RUN sed -e 's;^# \(%wheel.*NOPASSWD.*\);\1;g' -i /etc/sudoers
 RUN useradd pagermaid -r -m -d /pagermaid
 RUN usermod -aG wheel,users pagermaid
