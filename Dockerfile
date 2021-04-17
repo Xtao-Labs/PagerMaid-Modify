@@ -34,11 +34,6 @@ RUN source ~/.bashrc \
         libzbar-dev \
         libxslt1-dev \
         libxml2-dev \
-        libfreetype-dev \
-        libffi-dev \
-        libopenblas-dev \
-        liblapack-dev \
-        libpqxx-dev \
     && apt clean -y \
     && apt autoclean -y
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
@@ -51,9 +46,9 @@ RUN sed -e 's;^# \(%wheel.*NOPASSWD.*\);\1;g' -i /etc/sudoers
 RUN useradd pagermaid -r -m -d /pagermaid
 RUN usermod -aG sudo,users pagermaid
 USER pagermaid
-RUN mkdir /pagermaid
-RUN git clone -b master https://github.com/Xtao-Labs/PagerMaid-Modify.git /pagermaid
-WORKDIR /pagermaid
+RUN mkdir /pagermaid/workdir
+RUN git clone -b master https://github.com/Xtao-Labs/PagerMaid-Modify.git /pagermaid/workdir
+WORKDIR /pagermaid/workdir
 RUN pip -m pip install -r requirements.txt
 RUN sudo rm -rf /root/.cache
 CMD ["sh","utils/docker-run.sh"]
