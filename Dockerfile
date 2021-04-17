@@ -6,8 +6,8 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     PAGERMAID_DIR=/pagermaid \
     DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
-RUN source ~/.bashrc
-RUN apt update \
+RUN source ~/.bashrc \
+    && apt update \
     && apt upgrade -y \
     && apt install --no-install-recommends -y \
         software-properties-common \
