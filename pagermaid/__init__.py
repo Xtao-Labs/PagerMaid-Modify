@@ -16,6 +16,7 @@ from logging import getLogger, INFO, DEBUG, ERROR, StreamHandler, basicConfig
 from distutils2.util import strtobool
 from coloredlogs import ColoredFormatter
 from telethon import TelegramClient
+from telethon.errors.rpcerrorlist import MessageNotModifiedError, MessageIdInvalidError
 
 persistent_vars = {}
 module_dir = __path__[0]
@@ -148,6 +149,10 @@ def before_send(event, hint):
     if exc_info and isinstance(exc_info[0], ConnectionError):
         return None
     elif exc_info and isinstance(exc_info[0], CancelledError):
+        return None
+    elif exc_info and isinstance(exc_info[0], MessageNotModifiedError):
+        return None
+    elif exc_info and isinstance(exc_info[0], MessageIdInvalidError):
         return None
     if time() <= report_time + 30:
         report_time = time()
