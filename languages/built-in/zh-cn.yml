@@ -370,6 +370,8 @@ status_dialogs: 对话总数
 ## speedtest
 speedtest_des: 执行 speedtest 脚本并发送结果。
 speedtest_processing: 执行测试脚本 . . .
+speedtest_ServerFailure: 无法确定最佳服务器。。。
+speedtest_ConnectFailure: speedtest API 服务器连接失败。。。
 ## connection
 connection_des: 显示运行 PagerMaid-Modify 的服务器和 Telegram 服务器之间的连接信息。
 connection_hint: 连接信息
