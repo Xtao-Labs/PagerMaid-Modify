@@ -2,7 +2,7 @@
 
 from os import remove, popen
 from datetime import datetime
-from speedtest import Speedtest
+from speedtest import Speedtest, ShareResultsConnectFailure, ShareResultsSubmitFailure, SpeedtestBestServerFailure
 from telethon import functions
 from platform import python_version, uname
 from wordcloud import WordCloud
@@ -92,10 +92,18 @@ async def speedtest(context):
     """ Tests internet speed using speedtest. """
     await context.edit(lang('speedtest_processing'))
     test = Speedtest()
-    test.get_best_server()
+    try:
+        test.get_best_server()
+    except SpeedtestBestServerFailure:
+        await context.edit('无法确定最佳服务器')
+        return
     test.download()
     test.upload()
-    test.results.share()
+    try:
+        test.results.share()
+    except ShareResultsConnectFailure or ShareResultsSubmitFailure:
+        await context.edit('服务器连接失败')
+        return
     result = test.results.dict()
     des = (
         f"**Speedtest** \n"
