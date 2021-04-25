@@ -95,14 +95,14 @@ async def speedtest(context):
     try:
         test.get_best_server()
     except SpeedtestBestServerFailure:
-        await context.edit('无法确定最佳服务器')
+        await context.edit(lang('speedtest_ServerFailure'))
         return
     test.download()
     test.upload()
     try:
         test.results.share()
     except ShareResultsConnectFailure or ShareResultsSubmitFailure:
-        await context.edit('服务器连接失败')
+        await context.edit(lang('speedtest_ConnectFailure'))
         return
     result = test.results.dict()
     des = (
