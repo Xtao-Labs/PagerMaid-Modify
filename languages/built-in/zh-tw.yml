@@ -1,4 +1,4 @@
-# Chinese (Simplified)
+# Chinese (TW)
 # main
 web_TypeError: Error！Web 介面綁定了一個無效網址。
 web_KeyError: Error！設定檔缺少Web介面配置。
@@ -353,6 +353,8 @@ status_dialogs: 聊天總數
 # speedtest
 speedtest_des: 執行Speedtest腳本然後發送結果
 speedtest_processing: 執行腳本
+speedtest_ServerFailure: Unable to determine the best server.
+speedtest_ConnectFailure: Connection failure.
 # connection
 connection_des: 顯示伺服器和Telegram之間的資訊。
 connection_hint: 連接資訊
