@@ -25,7 +25,6 @@ RUN source ~/.bashrc \
         tesseract-ocr-chi-sim \
         language-pack-zh-hans \
         sudo \
-        s6 \
         git \
         openssl \
         redis-server \
