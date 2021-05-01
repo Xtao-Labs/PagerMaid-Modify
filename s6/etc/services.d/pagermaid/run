@@ -72,6 +72,9 @@ login () {
     echo
     echo "下面进行程序运行。"
     echo "请在账户授权完毕后，按 Ctrl + C 使 Docker 在后台模式下运行。"
+    echo "首次创建成功启动后请务必重启一次容器！！"
+    echo "首次创建成功启动后请务必重启一次容器！！"
+    echo "首次创建成功启动后请务必重启一次容器！！"
     echo
     sleep 2
     echo "Hello world!" > /pagermaid/workdir/install.lock
