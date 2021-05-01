@@ -75,7 +75,7 @@ login () {
     echo
     sleep 2
     echo "Hello world!" > /pagermaid/workdir/install.lock
-    exec s6-setuidgid pagermaid python -m pagermaid
+    pagermaid python -m pagermaid
     exit 0
 }
 

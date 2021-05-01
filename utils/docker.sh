@@ -60,6 +60,10 @@ start_docker() {
     sleep 3
     docker run -it -e PUID=$PUID -e PGID=$PGID --restart=always --name="$container_name" --hostname="$container_name" mrwangzhe/pagermaid_modify <&1
     echo ""
+    echo "首次创建后需要重启容器，3秒后开始重启 . . ."
+    sleep 3
+    docker restart $container_name
+    echo ""
     echo "Docker 创建完毕。"
     echo ""
     shon_online
