@@ -61,7 +61,7 @@ start_docker() {
     echo "开始配置参数 . . ."
     echo "在登录后，请按 Ctrl + C 使容器在后台模式下重新启动。"
     sleep 3
-    docker exec -it $container_name bash utils/docker-config.sh
+    docker exec -it -u pagermaid $container_name bash utils/docker-config.sh
     echo
     echo "Docker 创建完毕。"
     echo
