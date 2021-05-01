@@ -120,7 +120,8 @@ pagermaid.session
 pagermaid.session-journal
 *.pagermaid
 docker-compose.yml
-plugins/
+plugins/*.py
+plugins/*.py.disabled
 data/*
 pagermaid.egg-info/
 
@@ -141,6 +142,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# docker
-install.lock

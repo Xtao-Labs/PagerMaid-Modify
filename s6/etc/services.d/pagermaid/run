@@ -1,5 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-cd /pagermaid/workdir
-exec s6-setuidgid pagermaid python -m pagermaid
-

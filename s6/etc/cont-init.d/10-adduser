@@ -1,7 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-PUID=${PUID:-917}
-PGID=${PGID:-917}
-
-groupmod -o -g "$PGID" pagermaid
-usermod -o -u "$PUID" pagermaid

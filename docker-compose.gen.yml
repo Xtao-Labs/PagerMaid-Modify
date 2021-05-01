@@ -1,14 +1,11 @@
-version: "2.0"
+version: "1.3"
 services:
   pagermaid:
     image: mrwangzhe/pagermaid_modify
     restart: always
-    container_name: pagermaid
+    container_name: "pagermaid"
     hostname: "pagermaid"
     #ports:
-      #- "3333:3333"
+    #- "3333:3333"
     volumes:
-      - ./:/pagermaid/workdir
-    environment:
-      - PUID=917
-      - PGID=917
+    - ./:/pagermaid/workdir
