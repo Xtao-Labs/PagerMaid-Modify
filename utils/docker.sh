@@ -56,16 +56,15 @@ build_docker() {
 
 start_docker() {
     echo "正在启动 Docker 容器 . . ."
+    docker run -dit -e PUID=$PUID -e PGID=$PGID --restart=always --name="$container_name" --hostname="$container_name" mrwangzhe/pagermaid_modify <&1
+    echo
+    echo "开始配置参数 . . ."
     echo "在登录后，请按 Ctrl + C 使容器在后台模式下重新启动。"
     sleep 3
-    docker run -it -e PUID=$PUID -e PGID=$PGID --restart=always --name="$container_name" --hostname="$container_name" mrwangzhe/pagermaid_modify <&1
-    echo ""
-    echo "首次创建后需要重启容器，3秒后开始重启 . . ."
-    sleep 3
-    docker restart $container_name
-    echo ""
+    docker exec -it $container_name bash utils/docker-config.sh
+    echo
     echo "Docker 创建完毕。"
-    echo ""
+    echo
     shon_online
 }
 
