@@ -6,6 +6,9 @@ services:
     container_name: "pagermaid"
     hostname: "pagermaid"
     #ports:
-    #- "3333:3333"
+      #- "3333:3333"
     volumes:
-    - ./:/pagermaid/workdir
+      - ./:/pagermaid/workdir
+    environment:
+      - PUID=917
+      - PGID=917
