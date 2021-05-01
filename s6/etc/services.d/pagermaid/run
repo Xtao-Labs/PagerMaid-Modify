@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/with-contenv bash
 
 welcome () {
     echo 
@@ -75,8 +75,7 @@ login () {
     echo
     sleep 2
     echo "Hello world!" > /pagermaid/workdir/install.lock
-    redis-server --daemonize yes
-    python -m pagermaid
+    exec s6-setuidgid pagermaid python -m pagermaid
     exit 0
 }
 
@@ -90,10 +89,9 @@ main () {
         if [ ! -f "/pagermaid/workdir/pagermaid.session" ]; then
             login
         else
-            redis-server --daemonize yes
-            python -m pagermaid
+            exec s6-setuidgid pagermaid python -m pagermaid
         fi
     fi
 }
 
-exec s6-setuidgid pagermaid main
+main
