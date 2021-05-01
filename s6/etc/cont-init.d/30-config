@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+chown -R pagermaid:pagermaid /pagermaid
