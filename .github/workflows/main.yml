@@ -1,4 +1,4 @@
-name: "构建PagerMaid"
+name: "Docker"
 
 # Controls when the action will run. 
 on:
@@ -50,7 +50,7 @@ jobs:
             --build-arg "S6_VERSION=${FULL_VERSION}" \
             --build-arg "S6_ARCH=amd64" \
             --tag "${DOCKERHUB_REPOSITORY}:latest-amd64" \
-            -f pagermaid/Dockerfile \
+            -f Dockerfile \
             .
           IMAGES+=( "${DOCKERHUB_REPOSITORY}:latest-amd64" )
           
@@ -63,7 +63,7 @@ jobs:
             --build-arg "S6_VERSION=${FULL_VERSION}" \
             --build-arg "S6_ARCH=aarch64" \
             --tag "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" \
-            -f pagermaid/Dockerfile \
+            -f Dockerfile \
             .
           IMAGES+=( "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" )
           
