@@ -78,7 +78,7 @@ login () {
     echo
     sleep 2
     echo "Hello world!" > /pagermaid/workdir/install.lock
-    pagermaid python -m pagermaid
+    python -m pagermaid
     exit 0
 }
 
