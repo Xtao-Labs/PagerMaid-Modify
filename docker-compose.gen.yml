@@ -1,9 +1,9 @@
-version: "1.3"
+version: "2.0"
 services:
   pagermaid:
     image: mrwangzhe/pagermaid_modify
     restart: always
-    container_name: "pagermaid"
+    container_name: pagermaid
     hostname: "pagermaid"
     #ports:
       #- "3333:3333"
