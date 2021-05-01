@@ -82,7 +82,7 @@ RUN source ~/.bashrc \
     ## 克隆仓库
     && git clone -b master https://github.com/nevinen/PagerMaid-Modify.git $WORK_DIR \
     && git config --global pull.ff only \
-    ## 复制s6
+    ## 复制s6启动脚本
     && cp -r s6/* / \
     ## pip install
     && pip install -r requirements.txt \
