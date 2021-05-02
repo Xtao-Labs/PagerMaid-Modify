@@ -80,7 +80,7 @@ RUN source ~/.bashrc \
     && usermod -aG sudo,users $USER_NAME \
     && echo "$USER_NAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USER_NAME \
     ## 克隆仓库
-    && git clone -b master https://github.com/nevinen/PagerMaid-Modify.git $WORK_DIR \
+    && git clone -b master https://github.com/Xtao-Labs/PagerMaid-Modify.git $WORK_DIR \
     && git config --global pull.ff only \
     ## 复制s6启动脚本
     && cp -r s6/* / \
@@ -116,10 +116,5 @@ RUN source ~/.bashrc \
         /tmp/* \
         /var/lib/apt/lists/* \
         /var/tmp/* \
-        ~/.cache \
-    ## 最后改成国内源
-    && sed -i 's/archive.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
-    && sed -i 's/security.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
-    && sed -i 's/ports.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
-    && pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+        ~/.cache
 ENTRYPOINT ["/init"]
