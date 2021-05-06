@@ -46,6 +46,7 @@ RUN source ~/.bashrc \
     && apt-get install --no-install-recommends -y \
         ## 这是跨平台交叉编译要用到的包，如果自行构建，有可能不需要
         build-essential \
+        apt-utils \
         python3-dev \
         libxslt1-dev \
         libxml2-dev \
@@ -89,6 +90,7 @@ RUN source ~/.bashrc \
     ## 卸载编译依赖，清理安装缓存
     && sudo apt-get purge --auto-remove -y \
         build-essential \
+        apt-utils \
         python3-dev \
         libxslt1-dev \
         libxml2-dev \

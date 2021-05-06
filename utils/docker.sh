@@ -7,7 +7,7 @@ then
     exit 1
 fi
 
-welcome() {
+welcome () {
     echo
     echo "安装即将开始"
     echo "如果您想取消安装，"
@@ -29,7 +29,7 @@ docker_check () {
     fi
 }
 
-access_check() {
+access_check () {
     echo "测试 Docker 环境 . . ."
     if [ -w /var/run/docker.sock ]
     then
@@ -40,7 +40,7 @@ access_check() {
     fi
 }
 
-build_docker() {
+build_docker () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
     printf "请输入你想以哪个用户运行pagermaid，该用户的PUID值（如不懂请直接回车）："
@@ -54,7 +54,7 @@ build_docker() {
     docker pull mrwangzhe/pagermaid_modify
 }
 
-start_docker() {
+start_docker () {
     echo "正在启动 Docker 容器 . . ."
     docker run -dit -e PUID=$PUID -e PGID=$PGID --restart=always --name="$container_name" --hostname="$container_name" mrwangzhe/pagermaid_modify <&1
     echo
@@ -65,76 +65,140 @@ start_docker() {
     echo
     echo "Docker 创建完毕。"
     echo
-    shon_online
 }
 
-start_installation() {
+data_persistence () {
+    echo "数据持久化可以在升级或重新部署容器时保留配置文件和插件。"
+    printf "请确认是否进行数据持久化操作 [Y/n] ："
+    read -r persistence <&1
+    case $persistence in
+        [yY][eE][sS] | [yY])
+            printf "请输入将数据保留在宿主机哪个路径（绝对路径），同时请确保该路径下没有名为 workdir 的文件夹 ："
+            read -r data_path <&1
+            if [ -d $data_path ]; then
+                if [[ -z $container_name ]]; then
+                    printf "请输入 PagerMaid 容器的名称："
+                    read -r container_name <&1
+                fi
+                if docker inspect $container_name &>/dev/null; then
+                    docker cp $container_name:/pagermaid/workdir $data_path
+                    docker stop $container_name &>/dev/null
+                    docker rm $container_name &>/dev/null
+                    docker run -dit -e PUID=$PUID -e PGID=$PGID -v $data_path/workdir:/pagermaid/workdir --restart=always --name="$container_name" --hostname="$container_name" mrwangzhe/pagermaid_modify <&1
+                    echo
+                    echo "数据持久化操作完成。"
+                    echo 
+                    shon_online
+                else
+                    echo "不存在名为 $container_name 的容器，退出。"
+                    exit 1
+                fi
+            else
+                echo "路径 $data_path 不存在，退出。"
+                exit 1
+            fi
+            ;;
+        [nN][oO] | [nN])
+            echo "结束。"
+            ;;
+        *)
+            echo "输入错误 . . ."
+            exit 1
+            ;;
+    esac
+}
+
+start_installation () {
     welcome
     docker_check
     access_check
     build_docker
     start_docker
+    data_persistence
 }
 
-cleanup(){
+cleanup () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
-    echo "正在删除 Docker 镜像 . . ."
-    docker rm -f "$container_name" > /dev/null 2>&1
-    echo ""
-    shon_online
+    echo "开始删除 Docker 镜像 . . ."
+    if docker inspect $container_name &>/dev/null; then
+        docker rm -f "$container_name" &>/dev/null
+        echo
+        shon_online
+    else
+        echo "不存在名为 $container_name 的容器，退出。"
+        exit 1
+    fi
 }
 
-stop_pager(){
+stop_pager () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
     echo "正在关闭 Docker 镜像 . . ."
-    docker stop "$container_name" > /dev/null 2>&1
-    echo ""
-    shon_online
+    if docker inspect $container_name &>/dev/null; then
+        docker stop "$container_name" &>/dev/null
+        echo
+        shon_online
+    else
+        echo "不存在名为 $container_name 的容器，退出。"
+        exit 1
+    fi
 }
 
-start_pager(){
+start_pager () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
     echo "正在启动 Docker 容器 . . ."
-    docker start $container_name > /dev/null 2>&1
-    echo ""
-    echo "Docker 启动完毕。"
-    echo ""
-    shon_online
+    if docker inspect $container_name &>/dev/null; then
+        docker start $container_name &>/dev/null
+        echo
+        echo "Docker 启动完毕。"
+        echo
+        shon_online
+    else
+        echo "不存在名为 $container_name 的容器，退出。"
+        exit 1
+    fi
 }
 
-restart_pager(){
+restart_pager () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
     echo "正在重新启动 Docker 容器 . . ."
-    docker restart $container_name > /dev/null 2>&1
-    echo ""
-    echo "Docker 重新启动完毕。"
-    echo ""
-    shon_online
+    if docker inspect $container_name &>/dev/null; then
+        docker restart $container_name &>/dev/null
+        echo
+        echo "Docker 重新启动完毕。"
+        echo
+        shon_online
+    else
+        echo "不存在名为 $container_name 的容器，退出。"
+        exit 1
+    fi
 }
 
-reinstall_pager(){
+reinstall_pager () {
+    cleanup
     build_docker
     start_docker
+    data_persistence
 }
 
-shon_online(){
+shon_online () {
     echo
     echo "欢迎使用 PagerMaid-Modify Docker 一键安装脚本。"
     echo
     echo "请选择您需要进行的操作:"
     echo "  1) Docker 安装 PagerMaid"
     echo "  2) Docker 卸载 PagerMaid"
-    echo "  3) 关闭 PagerMaid"
-    echo "  4) 启动 PagerMaid"
-    echo "  5) 重新启动 PagerMaid"
-    echo "  6) 重新安装 PagerMaid"
-    echo "  7) 退出脚本"
+    echo "  3) Docker 关闭 PagerMaid"
+    echo "  4) Docker 启动 PagerMaid"
+    echo "  5) Docker 重启 PagerMaid"
+    echo "  6) Docker 重装 PagerMaid"
+    echo "  7) 将 PagerMaid 数据持久化"
+    echo "  8) 退出脚本"
     echo
-    echo "     Version：0.3.0"
+    echo "     Version：0.3.1"
     echo
     echo -n "请输入编号: "
     read N
@@ -158,6 +222,9 @@ shon_online(){
             reinstall_pager
             ;;
         7)
+            data_persistence
+            ;;
+        8)
             exit 0
             ;;
         *)
