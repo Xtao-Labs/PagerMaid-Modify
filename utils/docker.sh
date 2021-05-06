@@ -80,6 +80,16 @@ data_persistence () {
                     printf "请输入 PagerMaid 容器的名称："
                     read -r container_name <&1
                 fi
+                if [[ -z $PUID ]]; then
+                    printf "请输入你想以哪个用户运行pagermaid，该用户的PUID值（如不懂请直接回车）："
+                    read -r puid <&1
+                    PUID=${puid-:917}
+                fi
+                if [[ -z $PGID ]]; then
+                    printf "请输入你想以哪个用户运行pagermaid，该用户的PGID值（如不懂请直接回车）："
+                    read -r pgid <&1
+                    PGID=${pgid-:917}
+                fi
                 if docker inspect $container_name &>/dev/null; then
                     docker cp $container_name:/pagermaid/workdir $data_path
                     docker stop $container_name &>/dev/null
