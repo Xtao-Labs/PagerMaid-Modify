@@ -1,3 +1,7 @@
 #!/usr/bin/with-contenv bash
 
-exec s6-setuidgid pagermaid redis-server --daemonize yes
+if [[ $RUN_AS_ROOT != true ]]; then
+    exec s6-setuidgid pagermaid redis-server --daemonize yes
+else
+    redis-server --daemonize yes
+fi

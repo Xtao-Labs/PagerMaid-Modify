@@ -4,11 +4,12 @@ services:
     image: mrwangzhe/pagermaid_modify
     restart: always
     container_name: pagermaid
-    hostname: "pagermaid"
-    #ports:
+    hostname: pagermaid
+    #ports:                 # 是否开启网页控制面板
       #- "3333:3333"
     volumes:
       - ./:/pagermaid/workdir
     environment:
-      - PUID=917
-      - PGID=917
+      - RUN_AS_ROOT=true    # 是否以root权限运行pagermaid，true为是
+      - PUID=917            # 当 RUN_AS_ROOT=false 才生效，即以普通用户权限运行pagermaid
+      - PGID=917            # 当 RUN_AS_ROOT=false 才生效，即以普通用户权限运行pagermaid

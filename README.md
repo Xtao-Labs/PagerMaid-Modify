@@ -27,7 +27,7 @@ Pagermaid 是一个用在 Telegram 的实用工具。
 
 [一键脚本](https://t.me/PagerMaid_Modify/58)
 
-[Docker 脚本](https://t.me/PagerMaid_Modify/60)
+[Docker安装](utils/docker.md)
 
 # 对存在使用本项目用户群组的提醒
 

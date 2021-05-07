@@ -1,5 +1,9 @@
 #!/usr/bin/with-contenv bash
 
 cd /pagermaid/workdir
-exec s6-setuidgid pagermaid python -m pagermaid
+if [[ $RUN_AS_ROOT != true ]]; then
+    exec s6-setuidgid pagermaid python -m pagermaid
+else
+    python -m pagermaid
+fi
 

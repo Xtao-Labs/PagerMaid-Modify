@@ -43,12 +43,6 @@ access_check () {
 build_docker () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
-    printf "请输入你想以哪个用户运行pagermaid，该用户的PUID值（如不懂请直接回车）："
-    read -r puid <&1
-    PUID=${puid-:917}
-    printf "请输入你想以哪个用户运行pagermaid，该用户的PGID值（如不懂请直接回车）："
-    read -r pgid <&1
-    PGID=${pgid-:917}
     echo "正在拉取 Docker 镜像 . . ."
     docker rm -f "$container_name" > /dev/null 2>&1
     docker pull mrwangzhe/pagermaid_modify
@@ -56,12 +50,12 @@ build_docker () {
 
 start_docker () {
     echo "正在启动 Docker 容器 . . ."
-    docker run -dit -e PUID=$PUID -e PGID=$PGID --restart=always --name="$container_name" --hostname="$container_name" mrwangzhe/pagermaid_modify <&1
+    docker run -dit --restart=always --name="$container_name" --hostname="$container_name" mrwangzhe/pagermaid_modify <&1
     echo
     echo "开始配置参数 . . ."
     echo "在登录后，请按 Ctrl + C 使容器在后台模式下重新启动。"
     sleep 3
-    docker exec -it -u pagermaid $container_name bash utils/docker-config.sh
+    docker exec -it $container_name bash utils/docker-config.sh
     echo
     echo "Docker 创建完毕。"
     echo
@@ -79,16 +73,6 @@ data_persistence () {
                 if [[ -z $container_name ]]; then
                     printf "请输入 PagerMaid 容器的名称："
                     read -r container_name <&1
-                fi
-                if [[ -z $PUID ]]; then
-                    printf "请输入你想以哪个用户运行pagermaid，该用户的PUID值（如不懂请直接回车）："
-                    read -r puid <&1
-                    PUID=${puid-:917}
-                fi
-                if [[ -z $PGID ]]; then
-                    printf "请输入你想以哪个用户运行pagermaid，该用户的PGID值（如不懂请直接回车）："
-                    read -r pgid <&1
-                    PGID=${pgid-:917}
                 fi
                 if docker inspect $container_name &>/dev/null; then
                     docker cp $container_name:/pagermaid/workdir $data_path

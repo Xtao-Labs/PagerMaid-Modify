@@ -1,3 +1,5 @@
 #!/usr/bin/with-contenv bash
 
-chown -R pagermaid:pagermaid /pagermaid
+if [[ $RUN_AS_ROOT != true ]]; then
+    chown -R pagermaid:pagermaid /pagermaid
+fi

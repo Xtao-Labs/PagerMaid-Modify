@@ -7,7 +7,8 @@ ARG WORK_DIR=/pagermaid/workdir
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     SHELL=/bin/bash \
     LANG=zh_CN.UTF-8 \
-    PS1="\u@\h:\w \$ "
+    PS1="\u@\h:\w \$ " \
+    RUN_AS_ROOT=true
 SHELL ["/bin/bash", "-c"]
 WORKDIR $WORK_DIR
 RUN source ~/.bashrc \
