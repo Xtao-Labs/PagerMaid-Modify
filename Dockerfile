@@ -1,4 +1,4 @@
-FROM ubuntu:hirsute
+FROM ubuntu:latest
 ARG S6_VERSION=v2.2.0.3
 ARG S6_ARCH=amd64
 ARG DEBIAN_FRONTEND=noninteractive
