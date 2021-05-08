@@ -3,5 +3,5 @@
 if [[ $RUN_AS_ROOT != true ]]; then
     exec s6-setuidgid pagermaid redis-server --daemonize yes
 else
-    redis-server --daemonize yes
+    exec s6-setuidgid root redis-server --daemonize yes
 fi

@@ -2,10 +2,7 @@
 
 cd /pagermaid/workdir
 git remote set-url origin https://github.com/Xtao-Labs/PagerMaid-Modify.git
-requir_old=$(cat requirements.txt)
 git pull
 
-[[ $requir_old != $(cat requirements.txt) ]] && {
-    pip install -r requirements.txt
-    exit 0
-}
+pip install -r requirements.txt
+exit 0
