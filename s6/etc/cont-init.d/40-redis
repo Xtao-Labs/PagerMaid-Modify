@@ -1,7 +1,9 @@
 #!/usr/bin/with-contenv bash
 
-if [[ $RUN_AS_ROOT != true ]]; then
-    exec s6-setuidgid pagermaid redis-server --daemonize yes
-else
-    exec s6-setuidgid root redis-server --daemonize yes
-fi
+perl -i -pe "{
+    s|^dir /var/lib/redis|dir /pagermaid/workdir|;
+    s|^save \d+ 1|save 60 1|;
+    }" /etc/redis/redis.conf
+
+cd /pagermaid/workdir
+exec s6-setuidgid root redis-server /etc/redis/redis.conf
