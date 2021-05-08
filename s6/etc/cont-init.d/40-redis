@@ -6,4 +6,4 @@ perl -i -pe "{
     }" /etc/redis/redis.conf
 
 cd /pagermaid/workdir
-exec s6-setuidgid root redis-server /etc/redis/redis.conf
+redis-server /etc/redis/redis.conf
